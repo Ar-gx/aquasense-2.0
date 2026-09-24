@@ -1,0 +1,146 @@
+{
+  "_comment": "Crop reference data. Water demand is NOT stored as a single magic number — it is derived per farm from Kc x ETo (FAO-56 Hargreaves) x stage days x area. Values are reference estimates compiled from standard agronomy ranges (FAO Irrigation Drainage Paper 56 crop coefficients, typical Indian agronomy manuals). They are ESTIMATES, not measurements for a specific farm.",
+  "wheat": {
+    "display_name": "Wheat", "emoji": "\ud83c\udf3e", "color": "#d4a72c",
+    "lifespan_days": 130,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 15, "kc": 0.45, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 15, "end": 60, "kc": 0.75, "root_depth_m": 0.45, "mad": 0.5},
+      {"name": "Flowering", "start": 60, "end": 90, "kc": 1.15, "root_depth_m": 0.7, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 90, "end": 115, "kc": 0.95, "root_depth_m": 0.9, "mad": 0.5},
+      {"name": "Maturity", "start": 115, "end": 130, "kc": 0.45, "root_depth_m": 1.0, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 120, "p": 50, "k": 40},
+    "notes": "Rabi wheat. Water most sensitive at flowering."
+  },
+  "rice": {
+    "display_name": "Rice", "emoji": "\ud83c\udf5a", "color": "#7fb069",
+    "lifespan_days": 150,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 20, "kc": 1.0, "root_depth_m": 0.1, "mad": 0.3},
+      {"name": "Vegetative", "start": 20, "end": 70, "kc": 1.15, "root_depth_m": 0.3, "mad": 0.45},
+      {"name": "Flowering", "start": 70, "end": 100, "kc": 1.2, "root_depth_m": 0.5, "mad": 0.5},
+      {"name": "Fruiting / Grain Filling", "start": 100, "end": 130, "kc": 1.15, "root_depth_m": 0.6, "mad": 0.5},
+      {"name": "Maturity", "start": 130, "end": 150, "kc": 0.85, "root_depth_m": 0.6, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 120, "p": 50, "k": 60},
+    "notes": "Paddy. Flooded/alternate wetting-drying reduces demand vs continuous submersion."
+  },
+  "maize": {
+    "display_name": "Maize", "emoji": "\ud83c\udf3d", "color": "#f2b134",
+    "lifespan_days": 120,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 15, "kc": 0.4, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 15, "end": 55, "kc": 0.85, "root_depth_m": 0.4, "mad": 0.5},
+      {"name": "Flowering", "start": 55, "end": 75, "kc": 1.15, "root_depth_m": 0.7, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 75, "end": 105, "kc": 1.0, "root_depth_m": 0.9, "mad": 0.5},
+      {"name": "Maturity", "start": 105, "end": 120, "kc": 0.6, "root_depth_m": 1.0, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 150, "p": 60, "k": 60},
+    "notes": "Kharif/rabi maize."
+  },
+  "cotton": {
+    "display_name": "Cotton", "emoji": "\u2601\ufe0f", "color": "#c9d6df",
+    "lifespan_days": 180,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 25, "kc": 0.45, "root_depth_m": 0.2, "mad": 0.35},
+      {"name": "Vegetative", "start": 25, "end": 70, "kc": 0.8, "root_depth_m": 0.5, "mad": 0.5},
+      {"name": "Flowering", "start": 70, "end": 110, "kc": 1.15, "root_depth_m": 0.9, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 110, "end": 155, "kc": 1.05, "root_depth_m": 1.2, "mad": 0.5},
+      {"name": "Maturity", "start": 155, "end": 180, "kc": 0.7, "root_depth_m": 1.4, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 100, "p": 40, "k": 60},
+    "notes": "Long-duration cotton."
+  },
+  "sugarcane": {
+    "display_name": "Sugarcane", "emoji": "\ud83c\udf8b", "color": "#8acb88",
+    "lifespan_days": 320,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 30, "kc": 0.5, "root_depth_m": 0.2, "mad": 0.35},
+      {"name": "Vegetative", "start": 30, "end": 100, "kc": 0.9, "root_depth_m": 0.6, "mad": 0.5},
+      {"name": "Flowering", "start": 100, "end": 150, "kc": 1.1, "root_depth_m": 1.0, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 150, "end": 260, "kc": 1.1, "root_depth_m": 1.4, "mad": 0.5},
+      {"name": "Maturity", "start": 260, "end": 320, "kc": 0.75, "root_depth_m": 1.5, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 200, "p": 70, "k": 150},
+    "notes": "High water user — drip + mulch gives large savings potential."
+  },
+  "tomato": {
+    "display_name": "Tomato", "emoji": "\ud83c\udf45", "color": "#e15554",
+    "lifespan_days": 120,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 20, "kc": 0.5, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 20, "end": 50, "kc": 0.85, "root_depth_m": 0.35, "mad": 0.45},
+      {"name": "Flowering", "start": 50, "end": 70, "kc": 1.1, "root_depth_m": 0.5, "mad": 0.5},
+      {"name": "Fruiting / Grain Filling", "start": 70, "end": 100, "kc": 1.0, "root_depth_m": 0.6, "mad": 0.5},
+      {"name": "Maturity", "start": 100, "end": 120, "kc": 0.7, "root_depth_m": 0.6, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 100, "p": 50, "k": 120},
+    "notes": "Vegetable crop, sensitive to water stress at flowering."
+  },
+  "potato": {
+    "display_name": "Potato", "emoji": "\ud83e\udd54", "color": "#c9a227",
+    "lifespan_days": 100,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 15, "kc": 0.5, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 15, "end": 45, "kc": 0.9, "root_depth_m": 0.3, "mad": 0.45},
+      {"name": "Flowering", "start": 45, "end": 60, "kc": 1.1, "root_depth_m": 0.4, "mad": 0.5},
+      {"name": "Fruiting / Grain Filling", "start": 60, "end": 85, "kc": 1.0, "root_depth_m": 0.5, "mad": 0.5},
+      {"name": "Maturity", "start": 85, "end": 100, "kc": 0.65, "root_depth_m": 0.5, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 100, "p": 50, "k": 150},
+    "notes": "Tuber development — avoid both drought and waterlogging."
+  },
+  "soybean": {
+    "display_name": "Soybean", "emoji": "\ud83e\uded8", "color": "#6a994e",
+    "lifespan_days": 100,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 15, "kc": 0.4, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 15, "end": 45, "kc": 0.8, "root_depth_m": 0.4, "mad": 0.5},
+      {"name": "Flowering", "start": 45, "end": 65, "kc": 1.1, "root_depth_m": 0.6, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 65, "end": 85, "kc": 1.0, "root_depth_m": 0.8, "mad": 0.5},
+      {"name": "Maturity", "start": 85, "end": 100, "kc": 0.6, "root_depth_m": 0.9, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 40, "p": 30, "k": 60},
+    "notes": "Legume — fixes atmospheric nitrogen and rebuilds soil N."
+  },
+  "groundnut": {
+    "display_name": "Groundnut", "emoji": "\ud83e\udd5c", "color": "#b07f35",
+    "lifespan_days": 110,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 20, "kc": 0.45, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 20, "end": 50, "kc": 0.75, "root_depth_m": 0.35, "mad": 0.5},
+      {"name": "Flowering", "start": 50, "end": 70, "kc": 1.05, "root_depth_m": 0.5, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 70, "end": 95, "kc": 0.95, "root_depth_m": 0.7, "mad": 0.5},
+      {"name": "Maturity", "start": 95, "end": 110, "kc": 0.6, "root_depth_m": 0.8, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 25, "p": 25, "k": 50},
+    "notes": "Legume — nitrogen fixing, good rotation crop."
+  },
+  "onion": {
+    "display_name": "Onion", "emoji": "\ud83e\uddc5", "color": "#c1666b",
+    "lifespan_days": 120,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 20, "kc": 0.6, "root_depth_m": 0.1, "mad": 0.3},
+      {"name": "Vegetative", "start": 20, "end": 50, "kc": 0.9, "root_depth_m": 0.25, "mad": 0.45},
+      {"name": "Flowering", "start": 50, "end": 80, "kc": 1.05, "root_depth_m": 0.35, "mad": 0.5},
+      {"name": "Fruiting / Grain Filling", "start": 80, "end": 100, "kc": 1.0, "root_depth_m": 0.4, "mad": 0.5},
+      {"name": "Maturity", "start": 100, "end": 120, "kc": 0.85, "root_depth_m": 0.4, "mad": 0.55}
+    ],
+    "nutrient_demand_kg_ha": {"n": 80, "p": 40, "k": 60},
+    "notes": "Shallow roots — frequent small irrigations suit onion."
+  },
+  "other": {
+    "display_name": "Other crop", "emoji": "\ud83c\udf3f", "color": "#7ca982",
+    "lifespan_days": 120,
+    "stages": [
+      {"name": "Germination", "start": 0, "end": 18, "kc": 0.45, "root_depth_m": 0.15, "mad": 0.35},
+      {"name": "Vegetative", "start": 18, "end": 55, "kc": 0.8, "root_depth_m": 0.4, "mad": 0.5},
+      {"name": "Flowering", "start": 55, "end": 80, "kc": 1.1, "root_depth_m": 0.6, "mad": 0.55},
+      {"name": "Fruiting / Grain Filling", "start": 80, "end": 105, "kc": 1.0, "root_depth_m": 0.8, "mad": 0.5},
+      {"name": "Maturity", "start": 105, "end": 120, "kc": 0.6, "root_depth_m": 0.9, "mad": 0.6}
+    ],
+    "nutrient_demand_kg_ha": {"n": 90, "p": 40, "k": 60},
+    "notes": "Generic fallback when the farmer's crop is not in the reference list."
+  }
+}

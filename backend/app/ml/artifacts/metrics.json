@@ -1,0 +1,36 @@
+{
+  "model_name": "XGBoost (xgboost.XGBRegressor)",
+  "fallback_model": false,
+  "target": "soil moisture (% vol) 24 hours ahead",
+  "n_samples": 120000,
+  "data_seed": 42,
+  "train_size": 96000,
+  "test_size": 24000,
+  "mae_pct_points": 0.714,
+  "rmse_pct_points": 1.202,
+  "r2": 0.985,
+  "hyperparams": {
+    "n_estimators": 600,
+    "max_depth": 8,
+    "learning_rate": 0.04,
+    "subsample": 0.9,
+    "colsample_bytree": 0.9
+  },
+  "data_basis": "simulated",
+  "data_basis_note": "Trained and evaluated on a synthetic dataset generated from an FAO-style soil water-balance simulation (Kc x ETo, rainfall infiltration, irrigation with method efficiency, drainage). NOT field-validated measurements.",
+  "trained_at": "2026-09-24T17:25:40.763809Z",
+  "features": [
+    "soil_moisture",
+    "temp_c",
+    "humidity",
+    "rainfall_mm",
+    "wind_kmh",
+    "solar_mj",
+    "soil_code",
+    "crop_code",
+    "stage_code",
+    "prev_irrig_mm",
+    "hours_since_irrig",
+    "forecast_rain_mm"
+  ]
+}

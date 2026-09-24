@@ -1,0 +1,104 @@
+{
+  "_comment": "VERIFIED real organizations only. Every entry carries an official website URL for the farmer to verify; every URL re-checked live on 2026-09-24 (HTTP 200 — iwmi.org returns 403 to automated checkers but loads normally in a browser). No phone numbers, no partnerships, no contact persons are invented. Fields: states = regions served (empty = pan-India), services from a fixed tag list.",
+  "organizations": [
+    {
+      "name": "NABARD",
+      "org_type": "Public development bank",
+      "states": [],
+      "services": ["Soil health", "Water conservation", "Rainwater harvesting", "Sustainable farming", "Efficient irrigation"],
+      "website": "https://www.nabard.org",
+      "verified": true,
+      "note": "Rural development bank; publishes watershed and irrigation programs."
+    },
+    {
+      "name": "Indian Institute of Soil Science (IISS), Bhopal",
+      "org_type": "Government research institute",
+      "states": [],
+      "services": ["Soil health", "Soil testing guidance", "Nutrient management"],
+      "website": "https://iiss.res.in",
+      "verified": true,
+      "note": "National institute under ICAR for soil health research."
+    },
+    {
+      "name": "National Bureau of Soil Survey and Land Use Planning (NBSS&LUP)",
+      "org_type": "Government research institute",
+      "states": [],
+      "services": ["Soil health", "Soil mapping", "Land use planning"],
+      "website": "https://icar-nbsslup.org.in",
+      "verified": true,
+      "note": "ICAR institute producing soil resource maps of India."
+    },
+    {
+      "name": "Central Ground Water Board (CGWB)",
+      "org_type": "Government water body",
+      "states": [],
+      "services": ["Water conservation", "Rainwater harvesting", "Groundwater awareness"],
+      "website": "https://cgwb.gov.in",
+      "verified": true,
+      "note": "Central Ground Water Board — groundwater assessment and artificial recharge guidance."
+    },
+    {
+      "name": "IWMI (International Water Management Institute) — India",
+      "org_type": "International research organization",
+      "states": [],
+      "services": ["Efficient irrigation", "Water conservation", "Sustainable farming", "Rainwater harvesting"],
+      "website": "https://www.iwmi.org",
+      "verified": true,
+      "note": "Research on water management in agriculture."
+    },
+    {
+      "name": "WRI India",
+      "org_type": "Non-profit research organization",
+      "states": [],
+      "services": ["Water conservation", "Sustainable farming", "Groundwater stewardship"],
+      "website": "https://wri-india.org",
+      "verified": true,
+      "note": "World Resources Institute India — water and agriculture programs."
+    },
+    {
+      "name": "AgriClinics and Agri-Business Centres (ACABC) scheme",
+      "org_type": "Government scheme network",
+      "states": [],
+      "services": ["Modern irrigation technologies", "Soil health", "Agricultural education", "Sustainable farming"],
+      "website": "https://www.msme.gov.in",
+      "verified": true,
+      "note": "MSME-run network of agri-entrepreneur clinics."
+    },
+    {
+      "name": "Karnataka State Soil Health Card scheme (Dept. of Agriculture, Govt. of Karnataka)",
+      "org_type": "State government program",
+      "states": ["Karnataka"],
+      "services": ["Soil health", "Soil testing guidance", "Nutrient management"],
+      "website": "https://raitamitra.karnataka.gov.in",
+      "verified": true,
+      "note": "State soil testing and advisory program."
+    },
+    {
+      "name": "Maharashtra State Soil and Water Conservation Dept.",
+      "org_type": "State government department",
+      "states": ["Maharashtra"],
+      "services": ["Soil health", "Water conservation", "Watershed development"],
+      "website": "https://waterconserve.maharashtra.gov.in",
+      "verified": true,
+      "note": "State watershed and soil conservation programs."
+    },
+    {
+      "name": "Agricultural universities (state-wise ICAR universities)",
+      "org_type": "Education / extension",
+      "states": [],
+      "services": ["Agricultural education", "Efficient irrigation", "Soil health", "Sustainable farming"],
+      "website": "https://icar.org.in",
+      "verified": true,
+      "note": "ICAR network — local krishi vigyan kendras provide district-level extension support."
+    },
+    {
+      "name": "Krishi Vigyan Kendras (KVKs)",
+      "org_type": "Agricultural extension centers",
+      "states": [],
+      "services": ["Agricultural education", "Efficient irrigation", "Soil health", "Sustainable farming", "Modern irrigation technologies"],
+      "website": "https://icar.org.in/en/krishi-vigyan-kendras",
+      "verified": true,
+      "note": "District-level ICAR extension centers — closest practical point of contact for a farmer."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "Irrigation method reference. eff = application efficiency (fraction of applied water that reaches the root zone).",
+  "flood": {"label": "Flood / furrow irrigation", "eff": 0.45, "cost": "low",
+    "note": "Traditional method. 45-60% of water is lost to runoff and deep percolation."},
+  "furrow": {"label": "Furrow irrigation", "eff": 0.5, "cost": "low",
+    "note": "Better than broad flooding but still loses water to deep percolation."},
+  "sprinkler": {"label": "Sprinkler irrigation", "eff": 0.75, "cost": "medium",
+    "note": "Uniform application, ~75% efficiency, good for cereals and pulses."},
+  "drip": {"label": "Drip irrigation", "eff": 0.9, "cost": "high",
+    "note": "Delivers water directly to the root zone, ~90% efficiency, lowest leaching risk."},
+  "center_pivot": {"label": "Center pivot", "eff": 0.85, "cost": "high",
+    "note": "Large uniform fields, ~85% efficiency."},
+  "manual": {"label": "Manual / hose / can", "eff": 0.55, "cost": "low",
+    "note": "Labour intensive, uneven application, ~55% efficiency."},
+  "rainfed": {"label": "Rainfed (no irrigation)", "eff": 1.0, "cost": "none",
+    "note": "Depends entirely on rainfall — moisture monitoring becomes critical."}
+}

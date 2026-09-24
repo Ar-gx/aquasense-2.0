@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build output
+dist/
+build/
+*.tsbuildinfo
+
+# env — real API keys live only here, never commit
+.env
+.env.local
+.env.*.local
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# local database (regenerates on startup)
+backend/*.db
+backend/*.db-wal
+backend/*.db-shm
+backend/*-wal
+backend/*-shm
+
+# logs & OS
+*.log
+npm-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/
+.idea/
+*.swp

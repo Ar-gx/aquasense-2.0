@@ -1,0 +1,29 @@
+{
+  "_comment": "Deterministic Demo Farm used by the 'Try Demo Farm' button. All sensor/weather/irrigation values are SIMULATED and clearly labelled as such in the UI.",
+  "farm": {
+    "name": "Demo Farm",
+    "is_demo": true,
+    "crop_name": "wheat",
+    "custom_crop_name": null,
+    "sowing_date_offset_days": 78,
+    "growth_stage": "Flowering",
+    "area_ha": 2.5,
+    "soil_type": "loamy",
+    "soil_moisture_pct": 24.0,
+    "soil_moisture_source": "simulated",
+    "irrigation_method": "flood",
+    "taluk": "Chamarajanagar",
+    "district": "Chamarajanagar",
+    "state": "Karnataka",
+    "latitude": 11.92,
+    "longitude": 76.94,
+    "location_precision": "taluk-level",
+    "last_irrigation_offset_days": 5,
+    "last_irrigation_qty_l": 2500000,
+    "prev_irrigation_info": "Fixed schedule: flood irrigation every 5 days, about 2.4-2.6 million L per event (roughly 100 mm applied), regardless of weather or soil moisture.",
+    "previous_crop": "Pulses (kharif)",
+    "soil_nutrients": null,
+    "unknown_fields": ["soil_nutrients"],
+    "budget_hint": "low"
+  }
+}

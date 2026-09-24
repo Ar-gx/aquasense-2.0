@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-canvas text-mist font-body antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 80% -10%, rgba(109, 154, 76, 0.12), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(85, 127, 157, 0.10), transparent 55%),
+    radial-gradient(800px 420px at 50% 110%, rgba(212, 172, 69, 0.12), transparent 60%),
+    radial-gradient(700px 380px at 12% 80%, rgba(134, 102, 67, 0.10), transparent 60%);
+  background-attachment: fixed;
+}
+
+::selection {
+  @apply bg-leaf-500/25 text-leaf-800;
+}
+
+/* ---------- components ---------- */
+@layer components {
+  .glass {
+    @apply bg-panel/80 backdrop-blur-xl border border-line/80 rounded-2xl shadow-card;
+  }
+  .glass-strong {
+    @apply bg-panel/95 backdrop-blur-2xl border border-line rounded-3xl shadow-card;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5
+           text-[10px] font-medium tracking-wide uppercase;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-gradient-to-br from-leaf-500 to-leaf-700 px-5 py-2.5
+           text-sm font-semibold text-white shadow-glow
+           transition hover:brightness-110 hover:-translate-y-0.5
+           active:translate-y-0 focus:outline-none focus:ring-2
+           focus:ring-leaf-300/70 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border
+           border-line bg-panel/70 px-5 py-2.5 text-sm font-medium text-mist
+           transition hover:border-leaf-400/70 hover:bg-leaf-50 hover:text-leaf-700
+           focus:outline-none focus:ring-2 focus:ring-leaf-300/60;
+  }
+  .field {
+    @apply w-full rounded-xl border border-line bg-night/70 px-3.5 py-2.5
+           text-sm text-ink placeholder:text-mist/50
+           transition focus:border-leaf-400/70 focus:outline-none
+           focus:ring-2 focus:ring-leaf-400/20;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-mist/80;
+  }
+  .card-title {
+    @apply font-display text-sm font-semibold uppercase tracking-widest text-soil-700;
+  }
+}
+
+/* status colours */
+.st-good { @apply text-leaf-600; }
+.st-monitor { @apply text-warn-600; }
+.st-alert { @apply text-alert-600; }
+
+/* source chips */
+.src-live { @apply border-leaf-400/60 bg-leaf-500/10 text-leaf-700; }
+.src-user { @apply border-aqua-400/60 bg-aqua-500/10 text-aqua-700; }
+.src-historical { @apply border-sand-400/70 bg-sand-400/20 text-warn-700; }
+.src-estimated { @apply border-warn-400/60 bg-warn-500/15 text-warn-600; }
+.src-simulated { @apply border-soil-400/60 bg-soil-500/15 text-soil-700; }
+.src-model { @apply border-aqua-400/60 bg-aqua-500/10 text-aqua-700; }
+.src-rule { @apply border-mist/40 bg-mist/10 text-mist; }
+
+/* scrollbars */
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: rgba(35, 25, 15, 0.05); }
+*::-webkit-scrollbar-thumb {
+  background: rgba(134, 102, 67, 0.4); border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(134, 102, 67, 0.65); }
+
+/* range inputs */
+input[type="range"] { @apply accent-leaf-500; }
+
+/* leaflet tweaks for the warm light theme */
+.leaflet-container { background: #f3eee2; border-radius: 1rem; z-index: 0; }
+.leaflet-control-attribution {
+  background: rgba(253, 251, 246, 0.85) !important;
+  color: #65594b !important;
+  font-size: 9px !important;
+}
+.leaflet-control-attribution a { color: #577c3c !important; }
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

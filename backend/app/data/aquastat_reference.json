@@ -1,0 +1,19 @@
+{
+  "_comment": "FAO AQUASTAT reference extract — agricultural water context for India. Compiled from FAO AQUASTAT published country/region statistics (see `source_year`). Historical dataset, NOT live farm-level data. Used for context panels only.",
+  "source_year": "FAO AQUASTAT — India country profile (reference extract)",
+  "granularity": "national / sub-national",
+  "country": "India",
+  "indicators": [
+    {"code": "AO_AGR_WAW", "label": "Agricultural water withdrawal share", "unit": "% of total withdrawals", "value": 89, "year": "~2020"},
+    {"code": "AO_IRR_HARV", "label": "Area equipped for irrigation", "unit": "Mha", "value": 69.4, "year": "~2020"},
+    {"code": "AO_IRR_PROD", "label": "Share of food production from irrigated land", "unit": "%", "value": "~60", "year": "reference"},
+    {"code": "AO_WATER_STRESS", "label": "Water stress context", "unit": "-", "value": "High — groundwater over-exploited in many districts", "year": "reference"}
+  ],
+  "state_context": {
+    "Karnataka": {"irrigated_share_pct": "~35", "note": "Mixed rainfed/irrigated; drip subsidies widely promoted."},
+    "Maharashtra": {"irrigated_share_pct": "~20", "note": "Large rainfed area; watershed + drip priority."},
+    "Punjab": {"irrigated_share_pct": "~98", "note": "Intensively irrigated; groundwater depletion concern."},
+    "Tamil Nadu": {"irrigated_share_pct": "~65", "note": "Canal + tank systems; precision irrigation promoted."},
+    "Uttar Pradesh": {"irrigated_share_pct": "~75", "note": "Major sugarcane and wheat belt."}
+  }
+}

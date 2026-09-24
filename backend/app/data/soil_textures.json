@@ -1,0 +1,33 @@
+{
+  "_comment": "Soil texture reference values. fc = field capacity (% vol), wp = wilting point (% vol), sat = saturation (% vol), awc = available water capacity per metre (% vol), infil = typical infiltration (mm/hr). Reference estimates from standard soil-physics ranges — NOT measurements of the farmer's field.",
+  "sandy": {
+    "label": "Sandy", "fc": 12, "wp": 5, "sat": 35, "infil": 30,
+    "awc_mm_per_m": 70, "drainage": "fast", "retention": "low",
+    "note": "Drains quickly, low nutrient holding — favour drip, frequent small irrigations."
+  },
+  "loamy": {
+    "label": "Loamy", "fc": 32, "wp": 12, "sat": 46, "infil": 15,
+    "awc_mm_per_m": 200, "drainage": "moderate", "retention": "good",
+    "note": "Balanced structure — good for most crops and irrigation methods."
+  },
+  "clay": {
+    "label": "Clay", "fc": 40, "wp": 20, "sat": 52, "infil": 4,
+    "awc_mm_per_m": 150, "drainage": "slow", "retention": "high",
+    "note": "High retention, poor drainage — waterlogging and leaching risk if over-irrigated."
+  },
+  "sandy_loam": {
+    "label": "Sandy Loam", "fc": 20, "wp": 8, "sat": 40, "infil": 22,
+    "awc_mm_per_m": 120, "drainage": "moderate-fast", "retention": "moderate",
+    "note": "Leaches nutrients faster than loam — avoid large single irrigations."
+  },
+  "clay_loam": {
+    "label": "Clay Loam", "fc": 36, "wp": 16, "sat": 50, "infil": 8,
+    "awc_mm_per_m": 190, "drainage": "slow-moderate", "retention": "high",
+    "note": "Retains well — watch for waterlogging after heavy rain."
+  },
+  "other": {
+    "label": "Other / unknown", "fc": 30, "wp": 12, "sat": 45, "infil": 12,
+    "awc_mm_per_m": 180, "drainage": "moderate", "retention": "moderate",
+    "note": "Treated with loam-like defaults while the soil type is unknown."
+  }
+}

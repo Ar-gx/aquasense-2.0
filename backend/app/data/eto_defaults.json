@@ -1,0 +1,5 @@
+{
+  "_comment": "FAO-56 Hargreaves reference ETo (mm/day) used ONLY when live temperature data is unavailable. Clearly labelled as an estimate in the UI.",
+  "annual_default_mm_day": 5.0,
+  "notes": "FAO-56 Hargreaves ETo computed from temperature is used whenever Tmax/Tmin are available; this constant is the last-resort fallback."
+}

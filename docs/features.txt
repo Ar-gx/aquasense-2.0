@@ -1,0 +1,183 @@
+===============================================================================
+AQUASENSE AI — KEY FEATURES
+Smarter Irrigation. Healthier Soil. Every Drop Counts.
+Smart Agriculture (PS-2B) hackathon MVP
+===============================================================================
+
+CORE PURPOSE
+------------
+Answers one question for farmers: DO I NEED TO IRRIGATE? IF SO, WHEN, HOW
+MUCH, AND WHY? — decided from live weather, soil physics, crop growth stage
+and a trained ML model, instead of irrigating on a fixed calendar schedule.
+
+
+THE 8 SOLUTIONS (each with its own working page)
+------------------------------------------------
+01. CROP ANALYSIS (/crop-analysis)
+    - Lifecycle water budget: Kc x ETo x stage days
+    - Per-stage and cumulative water requirement (mm and litres)
+    - Current growth stage highlighted
+    - Yield benchmark shown as context only (never as a promise)
+
+02. IRRIGATION GOAL (/irrigation)
+    - 12-step hybrid engine (ML + rules): if / when / how much / what time
+    - Full human-readable reasoning chain
+    - Rain analysis and per-event savings vs a traditional schedule
+    - Method-upgrade comparison (flood vs drip vs sprinkler vs centre-pivot)
+
+03. NUTRIENT REPLENISHMENT (/soil-health)
+    - N/K depletion estimated by growth stage
+    - Legume rotation credit and manure recommendations
+    - Honest "data not used" list (no guessing presented as fact)
+
+04. MODERN IRRIGATION METHODS (/irrigation)
+    - Flood -> drip / sprinkler / centre-pivot efficiency table
+    - Per-method cost notes and what upgrading would change
+
+05. WATER ANALYTICS (/water-analytics + /impact)
+    - Baseline vs AI ledger: WaterSaved = Baseline - AI
+    - Negative savings stay negative (never flipped positive)
+    - Rainwater kept in a SEPARATE bucket (no double counting)
+    - Interactive water-savings calculator with validation
+
+06. WARNINGS (/dashboard)
+    - Red/amber/green risk panel: waterlogging, crop stress, nutrient,
+      weather and data-quality warnings
+    - Every warning shows cause + evidence
+
+07. NGO CONNECTIONS (/connect)
+    - Verified real organizations only, official website links
+    - State + service filter chips (11 filter categories)
+    - District-search deep link; no invented contacts or partnerships
+
+08. ACHIEVEMENTS (/achievements)
+    - Cumulative water saved, rainwater utilised, irrigation efficiency,
+      crop-water-adequacy, goal completion
+    - 7 clickable metric cards that switch the cumulative trend chart
+    - Every figure carries a source chip and honesty note
+
+
+ML MODEL
+--------
+- XGBoost regressor predicts root-zone soil moisture 24 h ahead
+- 12 features (moisture, temp, humidity, rain, wind, solar, soil/crop/stage
+  codes, previous irrigation, hours since irrigation, forecast rain)
+- Trained on 120,000 rows from an FAO-56-style soil water-balance simulation
+- Held-out metrics: MAE 0.714 % vol, RMSE 1.202 % vol, R2 0.985
+  (24,000-row test split; best of 5 configs x 5 data seeds by mean held-out MAE)
+- Transparently labelled "simulated — not field-validated" everywhere
+- Auto-trains on startup; falls back to a rule-based water-balance model
+- Reference ETo: Priestley-Taylor from NASA POWER solar (FAO-56 Hargreaves
+  fallback), clamped to a sane 2.5-9.5 mm/day range
+
+
+DATA SOURCES & HONEST LABELLING
+-------------------------------
+Every value in the UI carries a source chip; live, historical, model and
+simulated data are never mixed silently:
+  live_api            - OpenWeather, Open-Meteo, NASA POWER, data.gov.in,
+                        SoilGrids, Nominatim
+  historical_dataset  - FAO AQUASTAT, USDA NASS Quick Stats, FAO-56 Kc tables
+  model_prediction    - XGBoost output (+24 h moisture, trajectory)
+  rule_based          - transparent water-balance fallback
+  estimated           - reference-data calculations
+  simulated           - deterministic demo sensors/history (clearly tagged)
+  user_supplied       - your onboarding inputs and recorded events
+Weather cascade with graceful fallbacks; /data panel shows which layer
+actually answered. App works with every API key empty.
+
+
+DEMO FARM (one click, no signup, no sensors, no keys)
+-----------------------------------------------------
+- "Try Demo Farm" runs the full pipeline in ~30-60 s:
+  weather -> soil -> crop -> ML -> optimization -> savings
+- Deterministic: Wheat, flowering day 78/130, loamy soil, 2.5 ha, Karnataka
+- 30-day model scenario: baseline 12,500,000 L vs AI 7,217,666 L,
+  saved 2,782,334 L, rainwater 2,500,000 L, reduction 42.3 %
+- Recommendation adapts to live weather (Irrigation Required or Monitor)
+
+
+ONBOARDING WIZARD (/analyze, 5 steps)
+--------------------------------------
+- Step 1 Crop: 11 preset crop cards (wheat, rice, maize, cotton, sugarcane,
+  tomato, potato, soybean, groundnut, onion, custom "Other")
+- Step 2 Location, 4 zero-typing options:
+    * "Use my location" browser GPS geolocation
+    * Place search autocomplete (Open-Meteo geocoding)
+    * Interactive Leaflet/OpenStreetMap map — tap to drop a pin
+      (reverse-geocoded to administrative area)
+    * Manual text entry fallback
+- Step 3 Field: sowing date, area, growth stage (with "I don't know")
+- Step 4 Conditions: soil texture, moisture, irrigation method — every field
+  has an honest "I don't know" option, labelled as estimate downstream
+- Step 5 Review: shows each answer with its source (computed / estimated /
+  user-supplied) before analysis runs
+- Animated multi-phase analysis overlay while the pipeline runs
+
+
+OTHER PAGES
+-----------
+- Landing (/): problem statement, solutions, method, data-transparency
+  preview, CTAs
+- Dashboard (/demo): recommendation hero card (status, today's irrigation
+  goal, recommended time window, root-zone moisture gauge), 24 h/48 h/72 h
+  moisture forecast chart with crop-stress threshold, rain vs irrigation
+  chart, water-usage history, lifecycle chart, alerts panel, data-status
+  panel, "Re-run analysis" button
+- Weather (/weather): current conditions, 7-day forecast, NASA POWER
+  rainfall history chart, district rainfall
+- History (/history): daily/weekly/monthly/crop-cycle toggle, summary
+  tiles, water-usage chart, goal-vs-actual chart, RECORD AN IRRIGATION
+  EVENT form (quantity, method, moisture before/after, AI-followed flag),
+  recorded-events table with source chips
+- How It Works (/how-it-works): full method explanation
+- Data Transparency (/data): every source, status, limitation, model card,
+  API keys status
+- Impact (/impact): 4 hero impact numbers, basis statement, efficiency and
+  crop-adequacy stats, water-savings calculator, broader water/soil/agency
+  context cards
+- Settings (/settings): edit farm name, area, budget hint, soil, growth
+  stage, irrigation method, moisture, location fields; farm switcher
+  (list farms, load demo again); "Save & re-analyze" re-runs the pipeline
+- 404 page for unknown routes; /home redirects to landing
+
+
+APP EXPERIENCE
+--------------
+- 16 responsive routes with client-side SPA navigation
+- Mobile hamburger menu with full navigation grid
+- Dark theme, glassmorphism cards, animated entrances (Framer Motion)
+- Scroll-triggered card animations (whileInView)
+- CountUp number animations on impact/achievement stats
+- Recharts interactive charts with hover tooltips everywhere
+- Skeleton loading states and per-page error notes
+- Stale/removed farm IDs auto-clear back to a clean "No farm selected"
+- Farm selection persists across reloads (localStorage)
+
+
+HONEST LIMITATIONS (stated in the UI itself)
+--------------------------------------------
+- No sensor hardware: moisture is user-supplied or estimated;
+  demo readings simulated and labelled
+- No field validation: model metrics are held-out simulated data
+- No flow meters: savings are model scenarios, not metered results
+- No yield guarantees: crop adequacy is a coverage ratio, benchmarks
+  (NASS/AQUASTAT) are reference context only
+- No invented organisations: NGO links go to official websites only
+
+
+TECHNICAL SUMMARY
+-----------------
+- Frontend: React 18, TypeScript, Tailwind CSS, Vite, Recharts,
+  Framer Motion, Leaflet (loaded on demand), React Router
+- Backend: FastAPI, SQLAlchemy 2.0, Pydantic v2, SQLite (Postgres-ready),
+  XGBoost/scikit-learn, httpx
+- REST API under /api/v1: farms CRUD, sensors, weather, predict,
+  recommendation, dashboard, history, water-analytics, achievements,
+  nutrients, crops/soils/methods reference, data-status, organizations,
+  location search/reverse, water-calculator, impact, health
+- Interactive API docs at /docs
+- 22-endpoint smoke test (scripts/smoke_test.ps1) — 22/22 PASS
+- Production build passes with 0 TypeScript errors
+- Secrets live only in backend/.env (git-ignored); never shipped to browser
+- One-command startup: scripts/dev.ps1 (backend :8000 + frontend :5173)

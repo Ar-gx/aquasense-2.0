@@ -1,0 +1,19 @@
+{
+  "_comment": "USDA NASS published national yield benchmarks — used ONLY as a comparison/reference baseline in the UI. US national average yields for the 2024 crop year, taken from USDA NASS 'Crop Production 2024 Summary' (Jan 2025) and 'Vegetables 2024 Summary' (Feb 2025), converted from bu/acre, lb/acre, cwt/acre or tons/acre to t/ha. Historical dataset, NOT live API data, NOT a measurement of the farmer's field.",
+  "source_year": "USDA NASS Quick Stats — US national average yields, 2024 crop year (reference extract)",
+  "granularity": "US national average yield (2024 crop year), converted to t/ha",
+  "yields_t_ha": {
+    "wheat": 3.4,
+    "rice": 8.7,
+    "maize": 11.3,
+    "cotton": 0.9,
+    "sugarcane": 84.3,
+    "tomato": 100.8,
+    "potato": 50.9,
+    "soybean": 3.4,
+    "groundnut": 4.1,
+    "onion": 64.1,
+    "other": null
+  },
+  "notes": "Benchmark yields vary enormously with region and season. Cotton is lint yield; sugarcane is cane for sugar and seed; tomato combines fresh-market and processing. Shown as a labelled reference only — never presented as the farmer's expected yield."
+}
