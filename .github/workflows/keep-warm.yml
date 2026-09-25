@@ -10,7 +10,9 @@
 # as long as aquasense-api is your ONLY always-on free service. A
 # second one would push you over the cap and Render would suspend it.
 #
-# To enable: uncomment the `schedule:` block below and commit.
+# This workflow also fails when /health reports database.ready=false,
+# so a broken deploy shows up as a red run in the Actions tab.
+#
 # (GitHub auto-disables scheduled workflows after 60 days with no
 # repo activity — re-enable it from the Actions tab if that happens.)
 # =============================================================

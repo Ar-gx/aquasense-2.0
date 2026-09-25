@@ -41,9 +41,9 @@ Files involved:
 |---|---|
 | `render.yaml` | Render Blueprint — provisions the backend automatically |
 | `frontend/vercel.json` | `/api/*` → Render proxy + SPA deep-link fallback |
-| `backend/requirements.txt` | adds `psycopg2-binary` (Postgres driver) |
-| `backend/app/db/session.py` | connection pooling that survives DB restarts |
-| `.github/workflows/keep-warm.yml` | optional sleep-prevention ping |
+| `backend/requirements.txt` | `psycopg2-binary` driver + `sqlalchemy<2.1` pin (2.1 switched the Postgres driver) |
+| `backend/app/db/session.py` | driver-explicit URL + connection pooling that survives DB restarts |
+| `.github/workflows/keep-warm.yml` | keeps the API warm **and** fails if the database isn't ready |
 
 ---
 
@@ -108,8 +108,12 @@ that is the second rewrite in `vercel.json`.
 Without this, a visitor arriving after 15 quiet minutes waits ~60 s for Render
 to wake the service.
 
-1. Open `.github/workflows/keep-warm.yml` and uncomment the `schedule:` block.
-2. Commit + push, then enable the workflow in the repo's **Actions** tab.
+The workflow in this repo is already scheduled (`*/10 * * * *`) and does two
+things on every run:
+
+1. Pings `/api/v1/health` so Render never spins down.
+2. Fails if the payload says `database.ready: false` — a broken deploy turns
+   the Actions tab red, which is free uptime *and* database monitoring.
 
 Budget: Render grants **750 free instance-hours/month**; one always-on service
 uses ~730–744. It fits **only while `aquasense-api` is your only always-on free
