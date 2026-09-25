@@ -1,0 +1,39 @@
+# =============================================================
+# AquaSense AI — Render Blueprint (backend API)
+#
+# Deploy: https://dashboard.render.com → New → Blueprint →
+#         connect this GitHub repo. Render reads this file and
+#         provisions the web service automatically.
+#
+# Secrets marked `sync: false` are prompted for at creation time
+# and live ONLY in the Render dashboard — never in Git.
+# Every one of them is optional (the app has fallbacks for all).
+# =============================================================
+
+services:
+  - type: web
+    name: aquasense-api
+    runtime: python
+    rootDir: backend          # monorepo: build & run from backend/
+    branch: main
+    plan: free                # $0 — spins down after 15 idle min
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+
+    envVars:
+      # Match local dev (3.11). Render's default is much newer.
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+      # Postgres (Neon/Render) connection string — leave blank to use SQLite.
+      - key: DATABASE_URL
+        sync: false
+
+      # Live-weather keys (all optional, cascading fallbacks exist)
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: DATA_GOV_API_KEY
+        sync: false
+      - key: USDA_NASS_API_KEY
+        sync: false

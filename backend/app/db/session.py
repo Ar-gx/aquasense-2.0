@@ -9,15 +9,25 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import settings
 from app.db.base import Base
 
-engine = create_engine(
-    settings.resolved_database_url,
-    connect_args={"check_same_thread": False}
-    if settings.resolved_database_url.startswith("sqlite")
-    else {},
-    future=True,
-)
+_is_sqlite = settings.resolved_database_url.startswith("sqlite")
 
-if settings.resolved_database_url.startswith("sqlite"):
+# SQLite keeps its local-dev tuning; any server database (Postgres on
+# Render/Neon) gets a small recycled pool that survives DB restarts and
+# scale-to-zero — a stale socket must never kill a request.
+_engine_kwargs: dict = {"future": True}
+if _is_sqlite:
+    _engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    _engine_kwargs.update(
+        pool_pre_ping=True,   # ping before use: transparently reconnect
+        pool_recycle=1800,    # retire idle sockets before the server does
+        pool_size=5,
+        max_overflow=5,
+    )
+
+engine = create_engine(settings.resolved_database_url, **_engine_kwargs)
+
+if _is_sqlite:
 
     @event.listens_for(engine, "connect")
     def _set_sqlite_pragma(dbapi_connection, connection_record):  # pragma: no cover

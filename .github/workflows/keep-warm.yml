@@ -1,0 +1,33 @@
+# =============================================================
+# AquaSense AI — keep the free Render backend awake
+#
+# Render's FREE web service spins down after 15 idle minutes and
+# the next visitor pays a ~60 s cold start. This workflow pings the
+# health endpoint every 10 minutes so the API is always warm.
+#
+# Cost check: one always-on free service consumes ~730-744 of the
+# 750 free instance-hours Render grants per calendar month — it fits
+# as long as aquasense-api is your ONLY always-on free service. A
+# second one would push you over the cap and Render would suspend it.
+#
+# To enable: uncomment the `schedule:` block below and commit.
+# (GitHub auto-disables scheduled workflows after 60 days with no
+# repo activity — re-enable it from the Actions tab if that happens.)
+# =============================================================
+
+name: keep-backend-warm
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "*/10 * * * *"
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake the Render service
+        run: |
+          curl -fsS --retry 5 --retry-delay 30 --max-time 180 \
+            https://aquasense-api.onrender.com/api/v1/health
+          echo " backend warm"
