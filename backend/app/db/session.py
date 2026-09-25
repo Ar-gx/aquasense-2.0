@@ -36,7 +36,7 @@ except Exception as exc:  # noqa: BLE001
     # Import-time failure (missing/broken driver, unparsable URL). Render
     # throws away the logs of a dead deploy, so record the error here and
     # keep the process alive — /api/v1/health will report it.
-    state.boot_error = f"{type(exc).__name__}: {exc}"
+    state.note_failure(exc)
 
 if _is_sqlite and engine is not None:
 

@@ -24,6 +24,7 @@ def health():
     return ok({"status": "healthy" if state.db_ready else "degraded",
                "app": settings.app_name,
                "version": settings.app_version,
+               "environment": state.environment(),
                "database": {
                    "backend": settings.resolved_database_url.split(":", 1)[0],
                    "ready": state.db_ready,

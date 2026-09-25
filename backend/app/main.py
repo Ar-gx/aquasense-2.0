@@ -59,7 +59,7 @@ def on_startup() -> None:
         # Never crash-loop the container: Render discards the logs of a dead
         # deploy, so the failure is recorded here instead and stays readable
         # at /api/v1/health while the app serves in degraded mode.
-        state.boot_error = f"{type(exc).__name__}: {exc}"
+        state.note_failure(exc)
         log.exception("DB startup failed — serving degraded until fixed")
 
 
