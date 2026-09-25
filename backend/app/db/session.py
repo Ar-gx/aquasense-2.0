@@ -10,7 +10,17 @@ from app.core import state
 from app.core.config import settings
 from app.db.base import Base
 
-_is_sqlite = settings.resolved_database_url.startswith("sqlite")
+# SQLAlchemy 2.1 (Sep 2026) made bare postgresql:// mean psycopg (v3); we
+# ship psycopg2, so name the driver in the URL instead of trusting a default
+# that has already changed once. A URL that names its driver is left alone.
+def database_url() -> str:
+    url = settings.resolved_database_url
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg2://" + url[len("postgresql://"):]
+    return url
+
+
+_is_sqlite = database_url().startswith("sqlite")
 
 # SQLite keeps its local-dev tuning; any server database (Postgres on
 # Render/Neon) gets a small recycled pool that survives DB restarts and
@@ -31,7 +41,7 @@ else:
 
 engine = None
 try:
-    engine = create_engine(settings.resolved_database_url, **_engine_kwargs)
+    engine = create_engine(database_url(), **_engine_kwargs)
 except Exception as exc:  # noqa: BLE001
     # Import-time failure (missing/broken driver, unparsable URL). Render
     # throws away the logs of a dead deploy, so record the error here and

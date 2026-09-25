@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.core import state
 from app.core.config import DATA_DIR, settings
 from app.core.responses import ok
-from app.db.session import get_db
+from app.db.session import database_url, get_db
 from app.models import Farm, Organization
 from app.schemas import CalculatorRequest, ReverseRequest
 from app.services import (crop_service, location_service, ml_service,
@@ -26,7 +26,7 @@ def health():
                "version": settings.app_version,
                "environment": state.environment(),
                "database": {
-                   "backend": settings.resolved_database_url.split(":", 1)[0],
+                   "backend": database_url().split(":", 1)[0],
                    "ready": state.db_ready,
                    "error": state.boot_error,
                }})
