@@ -19,8 +19,8 @@ name: keep-backend-warm
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "*/10 * * * *"
+  schedule:
+    - cron: "*/10 * * * *"
 
 jobs:
   ping:
