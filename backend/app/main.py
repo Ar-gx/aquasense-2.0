@@ -6,6 +6,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core import state
 from app.core.config import settings
 from app.core.responses import ApiError, api_error_handler, unhandled_error_handler
 from app.db.session import SessionLocal, init_db
@@ -41,13 +42,21 @@ for router in (farms.router, sensors_weather.router, recommendation.router,
 
 @app.on_event("startup")
 def on_startup() -> None:
-    init_db()
-    db = SessionLocal()
     try:
-        seed_all(db)
-    finally:
-        db.close()
-    log.info("AquaSense AI ready — DB: %s", settings.resolved_database_url)
+        init_db()
+        db = SessionLocal()
+        try:
+            seed_all(db)
+        finally:
+            db.close()
+        state.db_ready = True
+        log.info("AquaSense AI ready — DB: %s", settings.resolved_database_url)
+    except Exception as exc:  # noqa: BLE001
+        # Never crash-loop the container: Render discards the logs of a dead
+        # deploy, so the failure is recorded here instead and stays readable
+        # at /api/v1/health while the app serves in degraded mode.
+        state.boot_error = f"{type(exc).__name__}: {exc}"
+        log.exception("DB startup failed — serving degraded until fixed")
 
 
 @app.get("/")

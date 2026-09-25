@@ -6,6 +6,7 @@ import json
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.core import state
 from app.core.config import DATA_DIR, settings
 from app.core.responses import ok
 from app.db.session import get_db
@@ -20,8 +21,14 @@ router = APIRouter(prefix="/api/v1", tags=["meta"])
 
 @router.get("/health")
 def health():
-    return ok({"status": "healthy", "app": settings.app_name,
-               "version": settings.app_version})
+    return ok({"status": "healthy" if state.db_ready else "degraded",
+               "app": settings.app_name,
+               "version": settings.app_version,
+               "database": {
+                   "backend": settings.resolved_database_url.split(":", 1)[0],
+                   "ready": state.db_ready,
+                   "error": state.boot_error,
+               }})
 
 
 # ----------------------------- reference -----------------------------

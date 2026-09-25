@@ -23,6 +23,9 @@ else:
         pool_recycle=1800,    # retire idle sockets before the server does
         pool_size=5,
         max_overflow=5,
+        # Fail fast instead of hanging: a serverless Postgres (Neon) that is
+        # unreachable would otherwise block the boot health check for minutes.
+        connect_args={"connect_timeout": 10},
     )
 
 engine = create_engine(settings.resolved_database_url, **_engine_kwargs)
