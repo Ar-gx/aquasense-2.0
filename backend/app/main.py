@@ -5,11 +5,13 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.engine import make_url
 
 from app.core import state
 from app.core.config import settings
 from app.core.responses import ApiError, api_error_handler, unhandled_error_handler
-from app.db.session import SessionLocal, engine, init_db
+from app.db.session import (SessionLocal, database_url, engine,
+                            init_db)
 from app.db.seed import seed_all
 from app.routes import analytics, farms, meta, recommendation, sensors_weather
 
@@ -54,7 +56,8 @@ def on_startup() -> None:
         finally:
             db.close()
         state.db_ready = True
-        log.info("AquaSense AI ready — DB: %s", settings.resolved_database_url)
+        # str(URL) masks the password; settings keeps the raw string.
+        log.info("AquaSense AI ready — DB: %s", make_url(database_url()))
     except Exception as exc:  # noqa: BLE001
         # Never crash-loop the container: Render discards the logs of a dead
         # deploy, so the failure is recorded here instead and stays readable

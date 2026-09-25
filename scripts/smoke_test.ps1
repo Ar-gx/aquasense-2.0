@@ -1,8 +1,11 @@
 # AquaSense AI — end-to-end smoke test (API level)
 # Verifies every endpoint the UI calls, in demo-flow order.
 # Usage: powershell -ExecutionPolicy Bypass -File scripts\smoke_test.ps1
+# Against production instead of localhost:
+#   $env:AQUASENSE_BASE = "https://aquasense-2-0.vercel.app/api/v1"; .\scripts\smoke_test.ps1
 $ErrorActionPreference = "Continue"
-$B = "http://127.0.0.1:8000/api/v1"
+$B = if ($env:AQUASENSE_BASE) { $env:AQUASENSE_BASE } else { "http://127.0.0.1:8000/api/v1" }
+"Target: $B"
 $script:results = @()
 
 function Hit($name, $method, $url, $body = $null) {

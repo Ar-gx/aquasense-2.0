@@ -152,6 +152,8 @@ Check the logs for `AquaSense AI ready — DB: postgresql+psycopg2://…`.
 | Vercel site loads but every API call 404s | `frontend/vercel.json` destination ≠ your real Render URL (step 3) |
 | Deep link (`/dashboard`) returns 404 | `vercel.json` not committed, or **Root Directory** isn't `frontend` |
 | Render build fails on pip | check `PYTHON_VERSION` is set to `3.11.9` in the service's Environment |
+| **Deploy failed** but the build succeeded (`update_failed`, exit 1) | The app died at boot. Render *discards the logs of a dead deploy* — open `https://<your-api>/api/v1/health` and read `data.database.error`; it holds the full traceback. Root cause that hit this repo: **SQLAlchemy 2.1 (Sep 2026) made bare `postgresql://` mean psycopg3**, which wasn't installed → fixed by pinning `sqlalchemy<2.1` and naming `postgresql+psycopg2://` in code |
+| `/health` returns 200 but `"ready": false` | Backend is up, database is not — `data.database.error` explains why. The keep-warm Action fails in this state so you get alerted |
 | `could not connect to server` in Render logs | `DATABASE_URL` typo, or Neon paused — run the query again and it wakes in ~1 s |
 | First page load takes ~60 s | Render free cold start — enable the keep-warm (step 5) |
 | Weather shows *simulated* | expected without API keys — add `OPENWEATHER_API_KEY` (step 2) |
