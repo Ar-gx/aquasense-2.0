@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core import state
 from app.core.config import settings
 from app.core.responses import ApiError, api_error_handler, unhandled_error_handler
-from app.db.session import SessionLocal, init_db
+from app.db.session import SessionLocal, engine, init_db
 from app.db.seed import seed_all
 from app.routes import analytics, farms, meta, recommendation, sensors_weather
 
@@ -42,6 +42,10 @@ for router in (farms.router, sensors_weather.router, recommendation.router,
 
 @app.on_event("startup")
 def on_startup() -> None:
+    if engine is None:
+        # Driver/URL problem already recorded at import time.
+        log.error("database engine unavailable — %s", state.boot_error)
+        return
     try:
         init_db()
         db = SessionLocal()

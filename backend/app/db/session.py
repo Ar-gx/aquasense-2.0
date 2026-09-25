@@ -6,6 +6,7 @@ from collections.abc import Generator
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.core import state
 from app.core.config import settings
 from app.db.base import Base
 
@@ -28,9 +29,16 @@ else:
         connect_args={"connect_timeout": 10},
     )
 
-engine = create_engine(settings.resolved_database_url, **_engine_kwargs)
+engine = None
+try:
+    engine = create_engine(settings.resolved_database_url, **_engine_kwargs)
+except Exception as exc:  # noqa: BLE001
+    # Import-time failure (missing/broken driver, unparsable URL). Render
+    # throws away the logs of a dead deploy, so record the error here and
+    # keep the process alive — /api/v1/health will report it.
+    state.boot_error = f"{type(exc).__name__}: {exc}"
 
-if _is_sqlite:
+if _is_sqlite and engine is not None:
 
     @event.listens_for(engine, "connect")
     def _set_sqlite_pragma(dbapi_connection, connection_record):  # pragma: no cover
@@ -45,6 +53,10 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 
 def init_db() -> None:
+    if engine is None:
+        # Driver/URL problem recorded in state.boot_error — nothing to create.
+        return
+
     # Import all model modules so metadata is populated.
     from app import models  # noqa: F401
 
