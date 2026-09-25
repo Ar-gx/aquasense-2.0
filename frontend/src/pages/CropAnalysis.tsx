@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { StageInfo } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import LifecycleWaterChart from "../components/charts/LifecycleWaterChart";
-import { Card, EmptyFarm, Note, ProgressBar, Skeleton, SourceChip } from "../components/ui/primitives";
+import { Card, EmptyFarm, Note, ProgressBar, Skeleton, SourceChip, TINT } from "../components/ui/primitives";
 import { fmtLitresShort, fmtL, pct } from "../lib/format";
 
 const DEMAND_TONE: Record<string, string> = {
@@ -80,22 +81,24 @@ export default function CropAnalysis() {
         {life.limitation}
       </Note>
 
-      {/* lifecycle chart */}
-      <Card className="!p-5">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <span className="card-title">Water demand by growth stage</span>
-          <div className="flex items-center gap-2">
-            <SourceChip source="estimated" label="FAO-56 style estimate" />
-            <span className="text-[11px] text-mist/70">
-              ETo {life.eto_mm_day} mm/day · {life.eto_source}
-            </span>
+      <AdvancedInfo hint="graphs & technical detail">
+        {/* lifecycle chart */}
+        <Card accent="leaf" className="!p-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="card-title">Water demand by growth stage</span>
+            <div className="flex items-center gap-2">
+              <SourceChip source="estimated" label="FAO-56 style estimate" />
+              <span className="text-[11px] text-mist/70">
+                ETo {life.eto_mm_day} mm/day · {life.eto_source}
+              </span>
+            </div>
           </div>
-        </div>
-        <LifecycleWaterChart life={life} />
-      </Card>
+          <LifecycleWaterChart life={life} />
+        </Card>
+      </AdvancedInfo>
 
       {/* stage progression detail */}
-      <Card className="!p-0 overflow-hidden">
+      <Card accent="soil" className="!p-0 overflow-hidden">
         <div className="border-b border-line/70 px-5 py-3.5">
           <span className="card-title">Stage-by-stage detail</span>
         </div>
@@ -160,7 +163,7 @@ export default function CropAnalysis() {
       </Card>
 
       {/* why demand changes */}
-      <Card className="!p-5">
+      <Card accent="aqua" className="!p-5">
         <span className="card-title">Why water demand changes</span>
         <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
           {(stageInfo.length ? stageInfo : []).map((s) => {
@@ -192,7 +195,7 @@ export default function CropAnalysis() {
 
       {/* current stage card */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5">
           <span className="card-title">Current stage focus</span>
           <div className="mt-3 flex items-baseline gap-3">
             <span className="font-display text-2xl font-semibold text-ink">
@@ -206,15 +209,15 @@ export default function CropAnalysis() {
             <ProgressBar value={life.stage_progress_pct} />
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+            <div className={`rounded-lg border p-3 ${TINT.aqua}`}>
               <div className="text-[10px] uppercase tracking-wider text-mist/70">
                 Stage Kc
               </div>
-              <div className="font-mono text-base text-leaf-700">
+              <div className="font-mono text-base text-aqua-700">
                 {reco.stage_kc}
               </div>
             </div>
-            <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+            <div className={`rounded-lg border p-3 ${TINT.leaf}`}>
               <div className="text-[10px] uppercase tracking-wider text-mist/70">
                 Active root depth
               </div>
@@ -232,7 +235,7 @@ export default function CropAnalysis() {
           </p>
         </Card>
 
-        <Card className="!p-5">
+        <Card accent="leaf" className="!p-5">
           <span className="card-title">Reference yield benchmark</span>
           <div className="mt-3 font-display text-3xl font-semibold text-warn-700">
             {dashboard.yield_reference.benchmark_yield_t_ha != null

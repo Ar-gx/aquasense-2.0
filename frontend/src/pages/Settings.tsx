@@ -127,7 +127,7 @@ export default function Settings() {
       <div className="space-y-4">
         <PageHeader eyebrow="Settings" title="Farm & app settings"
                     sub="No farm exists yet." />
-        <Card className="!p-6 text-center">
+        <Card accent="soil" className="!p-6 text-center">
           <p className="text-sm text-mist/70">
             Load the demo farm or run the onboarding wizard first.
           </p>
@@ -155,7 +155,7 @@ export default function Settings() {
       />
 
       {/* farm selector */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <span className="card-title">Farms in this browser session</span>
         <div className="mt-3 flex flex-wrap gap-2">
           {farms.map((f) => (
@@ -183,7 +183,7 @@ export default function Settings() {
 
       {/* edit form */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
+        <Card accent="aqua" className="!p-5">
           <div className="flex items-center justify-between">
             <span className="card-title">Farm details</span>
             <SourceChip source="user_supplied" label="editable" />
@@ -263,7 +263,7 @@ export default function Settings() {
           </div>
         </Card>
 
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5">
           <div className="flex items-center justify-between">
             <span className="card-title">Location</span>
             <SourceChip source={farm?.location_precision ?? "unknown"}
@@ -358,7 +358,7 @@ export default function Settings() {
       </div>
 
       {/* privacy / data */}
-      <Card className="!p-5">
+      <Card accent="soil" className="!p-5">
         <span className="card-title">Data & privacy</span>
         <ul className="mt-3 space-y-1.5 text-xs leading-relaxed text-mist/70">
           <li>• All farm data lives in a local SQLite file on this machine — no

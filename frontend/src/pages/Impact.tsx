@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { api } from "../services/api";
 import { useFarm } from "../context/FarmContext";
 import PageHeader from "../components/ui/PageHeader";
-import { Card, CountUp, Note, Skeleton, SourceChip } from "../components/ui/primitives";
+import { Card, CountUp, Note, Skeleton, SourceChip, TINT } from "../components/ui/primitives";
 import { fmtLitresShort, pct } from "../lib/format";
 
 interface ImpactData {
@@ -177,7 +177,7 @@ export default function Impact() {
       )}
 
       {/* water calculator */}
-      <Card className="!p-5">
+      <Card accent="sand" className="!p-5">
         <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Water-savings calculator</span>
           <SourceChip source="illustrative_comparison"
@@ -222,7 +222,7 @@ export default function Impact() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-4 rounded-xl border border-line/70 bg-night/40 p-4"
+            className={`mt-4 rounded-xl border p-4 ${TINT.sand}`}
           >
             <div className="grid gap-3 text-center sm:grid-cols-3">
               <div>
@@ -270,7 +270,7 @@ export default function Impact() {
 
       {/* broader impact */}
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="!p-5">
+        <Card accent="aqua" className="!p-5">
           <span className="card-title">💧 Water</span>
           <p className="mt-2 text-xs leading-relaxed text-mist/75">
             Agriculture uses ~89% of India&rsquo;s water withdrawals (FAO
@@ -279,7 +279,7 @@ export default function Impact() {
           </p>
           <SourceChip source="historical_dataset" label="FAO AQUASTAT" />
         </Card>
-        <Card className="!p-5">
+        <Card accent="leaf" className="!p-5">
           <span className="card-title">🌱 Soil</span>
           <p className="mt-2 text-xs leading-relaxed text-mist/75">
             Right-sizing irrigations prevents waterlogging and nutrient leaching
@@ -288,7 +288,7 @@ export default function Impact() {
           </p>
           <SourceChip source="estimated" label="agronomy ranges" />
         </Card>
-        <Card className="!p-5">
+        <Card accent="soil" className="!p-5">
           <span className="card-title"> farmer agency</span>
           <p className="mt-2 text-xs leading-relaxed text-mist/75">
             Every figure exposes its source, so farmers and extension workers can

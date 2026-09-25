@@ -5,7 +5,7 @@ import { api } from "../services/api";
 import { useFarm } from "../context/FarmContext";
 import type { Organization } from "../lib/types";
 import PageHeader from "../components/ui/PageHeader";
-import { Card, EmptyFarm, Note, Skeleton, SourceChip } from "../components/ui/primitives";
+import { Card, EmptyFarm, Note, Skeleton, SourceChip, TINT } from "../components/ui/primitives";
 
 const SERVICES = [
   "Soil health", "Soil testing guidance", "Nutrient management",
@@ -103,7 +103,7 @@ export default function Connect() {
       )}
 
       {/* education */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Education & self-service</span>
           <SourceChip source="live_api" label="external links" />
@@ -262,8 +262,8 @@ function Edu({ title, body, link }: {
 }) {
   return (
     <a href={link} target="_blank" rel="noreferrer"
-       className="rounded-xl border border-line/60 bg-night/40 p-3.5 transition
-                  hover:-translate-y-0.5 hover:border-leaf-400/50">
+       className={`rounded-xl border p-3.5 transition
+                   hover:-translate-y-0.5 hover:border-leaf-400/50 ${TINT.leaf}`}>
       <div className="font-medium text-ink">{title} ↗</div>
       <p className="mt-1 text-[11px] leading-relaxed text-mist/70">{body}</p>
     </a>

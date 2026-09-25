@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useFarm } from "../context/FarmContext";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import RainVsIrrigationChart from "../components/charts/RainVsIrrigationChart";
-import { Card, EmptyFarm, Note, SourceChip } from "../components/ui/primitives";
+import { Card, EmptyFarm, Note, SourceChip, TINT } from "../components/ui/primitives";
 import { fmtLitresShort, fmtL, pct } from "../lib/format";
 
 export default function Irrigation() {
@@ -57,19 +58,21 @@ export default function Irrigation() {
               </span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-mist/85">{r.reason}</p>
-            <ol className="mt-4 space-y-1.5">
-              {r.reason_parts.map((p, i) => (
-                <li key={i} className="flex gap-2 text-xs leading-relaxed
-                                       text-mist/70">
-                  <span className="grid h-4 w-4 shrink-0 place-items-center
-                                   rounded-full border border-leaf-400/40
-                                   font-mono text-[9px] text-leaf-600 mt-0.5">
-                    {i + 1}
-                  </span>
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ol>
+            <AdvancedInfo hint="step-by-step reasoning">
+              <ol className="mt-4 space-y-1.5">
+                {r.reason_parts.map((p, i) => (
+                  <li key={i} className="flex gap-2 text-xs leading-relaxed
+                                         text-mist/70">
+                    <span className="grid h-4 w-4 shrink-0 place-items-center
+                                     rounded-full border border-leaf-400/40
+                                     font-mono text-[9px] text-leaf-600 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ol>
+            </AdvancedInfo>
           </div>
           <div className="text-end">
             <div className="text-xs uppercase tracking-wider text-mist/75">
@@ -155,22 +158,24 @@ export default function Irrigation() {
         )}
       </div>
 
-      {/* rain chart */}
-      <Card className="!p-5">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <span className="card-title">Rainfall vs irrigation stance (7 days)</span>
-          <SourceChip source={dashboard.forecast.source}
-                      label={dashboard.forecast.source_label} />
-        </div>
-        <RainVsIrrigationChart forecast={dashboard.forecast.daily} reco={r} />
-      </Card>
+      <AdvancedInfo hint="graphs & technical detail">
+        {/* rain chart */}
+        <Card accent="aqua" className="!p-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="card-title">Rainfall vs irrigation stance (7 days)</span>
+            <SourceChip source={dashboard.forecast.source}
+                        label={dashboard.forecast.source_label} />
+          </div>
+          <RainVsIrrigationChart forecast={dashboard.forecast.daily} reco={r} />
+        </Card>
+      </AdvancedInfo>
 
       {/* savings per event */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
+        <Card accent="leaf" className="!p-5">
           <span className="card-title">Per-event savings</span>
           <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-            <div className="rounded-xl border border-line/70 bg-night/40 p-3">
+            <div className={`rounded-xl border p-3 ${TINT.alert}`}>
               <div className="text-[10px] uppercase tracking-wider text-mist/70">
                 Traditional event
               </div>
@@ -210,7 +215,7 @@ export default function Irrigation() {
           <SourceChip source={String(r.savings.source ?? "estimated")} />
         </Card>
 
-        <Card className="!p-5">
+        <Card accent="soil" className="!p-5">
           <span className="card-title">Method upgrade suggestion</span>
           {upgrade ? (
             <>
@@ -225,15 +230,15 @@ export default function Irrigation() {
                 {upgrade.why}
               </p>
               <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
-                <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+                <div className={`rounded-lg border p-3 ${TINT.soil}`}>
                   <div className="text-[10px] uppercase tracking-wider text-mist/70">
                     Event qty with upgrade
                   </div>
-                  <div className="font-mono text-aqua-600">
+                  <div className="font-mono text-soil-700">
                     {fmtLitresShort(upgrade.event_qty_with_suggestion_l)}
                   </div>
                 </div>
-                <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+                <div className={`rounded-lg border p-3 ${TINT.leaf}`}>
                   <div className="text-[10px] uppercase tracking-wider text-mist/70">
                     Change per event
                   </div>
@@ -308,7 +313,7 @@ function MethodsTable() {
       note: "Rainfall only — monitoring becomes critical." },
   ];
   return (
-    <Card className="!p-0 overflow-hidden">
+    <Card accent="sand" className="!p-0 overflow-hidden">
       <div className="border-b border-line/70 px-5 py-3.5">
         <span className="card-title">Modern irrigation methods — efficiency reference</span>
       </div>

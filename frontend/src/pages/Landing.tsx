@@ -103,8 +103,12 @@ export default function Landing() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* ---------------- top bar ---------------- */}
-      <header className="sticky top-0 z-50 border-b border-line/60 bg-panel/80
+      <header className="sticky top-0 z-50 border-b border-line/60 bg-night/85
                           backdrop-blur-xl">
+        {/* horizon stripe — leaf → aqua → sand → soil */}
+        <span aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[3px]
+                         bg-[linear-gradient(90deg,#6d9a4c_0%,#557f9d_35%,#d4ac45_70%,#a18055_100%)]" />
         <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-4 px-4">
           <span className="flex items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-lg
@@ -452,7 +456,7 @@ export default function Landing() {
       </section>
 
       {/* ---------------- footer ---------------- */}
-      <footer className="border-t border-line/70 bg-panel/70 py-8">
+      <footer className="border-t border-line/70 bg-night/70 py-8">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center
                         justify-between gap-3 px-4 text-xs text-mist/70 md:px-6">
           <span>AquaSense AI · Smarter Irrigation. Healthier Soil. Every Drop Counts.</span>

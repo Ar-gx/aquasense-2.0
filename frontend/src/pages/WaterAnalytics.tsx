@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { WaterAnalytics as WaterAnalyticsT } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import ComparisonChart from "../components/charts/ComparisonChart";
 import WaterUsageChart from "../components/charts/WaterUsageChart";
@@ -115,8 +116,9 @@ export default function WaterAnalyticsPage() {
         </div>
       </div>
 
+      <AdvancedInfo hint="graphs & assumptions">
       {/* comparison chart */}
-      <Card className="!p-5">
+      <Card accent="aqua" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Per-hectare & whole-farm comparison</span>
           <SourceChip source={s.source} label="model scenario" />
@@ -133,7 +135,7 @@ export default function WaterAnalyticsPage() {
       </Card>
 
       {/* usage chart */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <div className="mb-3 flex items-center justify-between">
           <span className="card-title">Usage over time</span>
           <span className="text-[11px] text-mist/70">
@@ -143,32 +145,9 @@ export default function WaterAnalyticsPage() {
         <WaterUsageChart daily={data.daily} series={data.series ?? data.daily} />
       </Card>
 
-      {/* efficiency + assumptions */}
+      {/* assumptions — behind Advanced info */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
-          <span className="card-title">Irrigation efficiency</span>
-          <div className="mt-4 space-y-3">
-            <EffBar label="Baseline (traditional method)"
-                    value={s.irrigation_efficiency_baseline}
-                    tone="from-alert-500 to-alert-400" />
-            <EffBar label="AI-recommended (post-upgrade)"
-                    value={s.irrigation_efficiency_ai ?? s.irrigation_efficiency_baseline}
-                    tone="from-leaf-500 to-leaf-300" />
-          </div>
-          {s.efficiency_improvement_pct != null && (
-            <p className="mt-3 text-xs text-leaf-600">
-              +{s.efficiency_improvement_pct} percentage points from applying the
-              same volume more precisely (and suggesting method upgrades).
-            </p>
-          )}
-          <p className="mt-2 text-[11px] leading-relaxed text-mist/75">
-            Efficiency = share of applied water reaching the root zone (method
-            reference: flood 45% → drip 90%). It changes how much net water the
-            crop gets, not the water you pump for free.
-          </p>
-        </Card>
-
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5 lg:col-span-2">
           <span className="card-title">Assumptions behind these numbers</span>
           <ul className="mt-3 space-y-2 text-xs leading-relaxed text-mist/75">
             <li className="flex gap-2">
@@ -211,6 +190,31 @@ export default function WaterAnalyticsPage() {
           )}
         </Card>
       </div>
+      </AdvancedInfo>
+
+      {/* irrigation efficiency — plain-language bars, kept visible */}
+      <Card accent="soil" className="!p-5">
+        <span className="card-title">Irrigation efficiency</span>
+        <div className="mt-4 space-y-3">
+          <EffBar label="Baseline (traditional method)"
+                  value={s.irrigation_efficiency_baseline}
+                  tone="from-alert-500 to-alert-400" />
+          <EffBar label="AI-recommended (post-upgrade)"
+                  value={s.irrigation_efficiency_ai ?? s.irrigation_efficiency_baseline}
+                  tone="from-leaf-500 to-leaf-300" />
+        </div>
+        {s.efficiency_improvement_pct != null && (
+          <p className="mt-3 text-xs text-leaf-600">
+            +{s.efficiency_improvement_pct} percentage points from applying the
+            same volume more precisely (and suggesting method upgrades).
+          </p>
+        )}
+        <p className="mt-2 text-[11px] leading-relaxed text-mist/75">
+          Efficiency = share of applied water reaching the root zone (method
+          reference: flood 45% → drip 90%). It changes how much net water the
+          crop gets, not the water you pump for free.
+        </p>
+      </Card>
 
       <Note tone="info">
         {data.note ?? "Figures are a model scenario over a 30-day window, not a"

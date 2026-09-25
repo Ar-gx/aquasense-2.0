@@ -7,6 +7,7 @@ import {
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { HistoryPayload } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import WaterUsageChart from "../components/charts/WaterUsageChart";
 import { Card, EmptyFarm, Note, Skeleton, SourceChip } from "../components/ui/primitives";
@@ -114,8 +115,9 @@ export default function History() {
               tone="text-aqua-600" sub="never double-counted as irrigation savings" />
       </div>
 
+      <AdvancedInfo hint="graphs & technical detail">
       {/* main chart */}
-      <Card className="!p-5">
+      <Card accent="aqua" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Water usage history</span>
           <span className="text-[11px] text-mist/70">
@@ -134,9 +136,8 @@ export default function History() {
         </p>
       </Card>
 
-      <div className="grid gap-5 lg:grid-cols-2">
         {/* goal completion */}
-        <Card className="!p-5">
+        <Card accent="leaf" className="!p-5">
           <div className="mb-3 flex items-center justify-between">
             <span className="card-title">Daily goal vs traditional use</span>
             <SourceChip source="model_prediction" label="AI goal" />
@@ -168,9 +169,11 @@ export default function History() {
             the AI goal for that day (varies with stage, ETo and rain).
           </p>
         </Card>
+      </AdvancedInfo>
 
+      <div className="grid gap-5 lg:grid-cols-2">
         {/* record irrigation */}
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5 lg:col-span-2">
           <span className="card-title">Record an irrigation event</span>
           <p className="mt-1 text-xs text-mist/65">
             Log what actually happened — real events override simulated history.
@@ -233,7 +236,7 @@ export default function History() {
       </div>
 
       {/* events table */}
-      <Card className="!p-0 overflow-hidden">
+      <Card accent="soil" className="!p-0 overflow-hidden">
         <div className="flex items-center justify-between border-b border-line/70
                         px-5 py-3.5">
           <span className="card-title">Recorded events</span>

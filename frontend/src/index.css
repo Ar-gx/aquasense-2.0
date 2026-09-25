@@ -12,12 +12,15 @@ html {
 
 body {
   @apply bg-canvas text-mist font-body antialiased;
+  /* layer 1: soil-dot grain · 2–5: leaf/aqua/sand/soil washes pulled on-screen */
   background-image:
-    radial-gradient(1200px 600px at 80% -10%, rgba(109, 154, 76, 0.12), transparent 60%),
-    radial-gradient(900px 500px at -10% 30%, rgba(85, 127, 157, 0.10), transparent 55%),
-    radial-gradient(800px 420px at 50% 110%, rgba(212, 172, 69, 0.12), transparent 60%),
-    radial-gradient(700px 380px at 12% 80%, rgba(134, 102, 67, 0.10), transparent 60%);
-  background-attachment: fixed;
+    radial-gradient(circle at 1px 1px, rgba(107, 81, 54, 0.17) 1px, transparent 0),
+    radial-gradient(1400px 700px at 50% -15%, rgba(109, 154, 76, 0.30), transparent 65%),
+    radial-gradient(1000px 900px at -15% 45%, rgba(85, 127, 157, 0.26), transparent 60%),
+    radial-gradient(1100px 700px at 105% 55%, rgba(212, 172, 69, 0.22), transparent 60%),
+    radial-gradient(1400px 600px at 50% 115%, rgba(134, 102, 67, 0.24), transparent 65%);
+  background-size: 24px 24px, auto, auto, auto, auto;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
 }
 
 ::selection {
@@ -27,7 +30,7 @@ body {
 /* ---------- components ---------- */
 @layer components {
   .glass {
-    @apply bg-panel/80 backdrop-blur-xl border border-line/80 rounded-2xl shadow-card;
+    @apply bg-panel/80 backdrop-blur-xl border border-line rounded-2xl shadow-card;
   }
   .glass-strong {
     @apply bg-panel/95 backdrop-blur-2xl border border-line rounded-3xl shadow-card;

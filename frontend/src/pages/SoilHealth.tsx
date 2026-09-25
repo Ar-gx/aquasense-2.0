@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useFarm } from "../context/FarmContext";
 import PageHeader from "../components/ui/PageHeader";
-import { Card, EmptyFarm, Note, ProgressBar, SourceChip } from "../components/ui/primitives";
+import { Card, EmptyFarm, Note, ProgressBar, SourceChip, TINT } from "../components/ui/primitives";
 import { pct } from "../lib/format";
 
 const BAND_LABEL: Record<string, { label: string; cls: string }> = {
@@ -12,6 +12,13 @@ const BAND_LABEL: Record<string, { label: string; cls: string }> = {
   monitor: { label: "Monitor", cls: "text-warn-600" },
   crop_stress: { label: "Crop stress", cls: "text-alert-600" },
   unknown: { label: "Unknown (estimated)", cls: "text-mist/70" },
+};
+
+/** Per-nutrient number colour, matching its TINT tile. */
+const NUMBER_TONE: Record<string, string> = {
+  leaf: "text-leaf-700",
+  aqua: "text-aqua-700",
+  soil: "text-soil-700",
 };
 
 export default function SoilHealth() {
@@ -49,7 +56,7 @@ export default function SoilHealth() {
 
       {/* moisture gauge */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
+        <Card accent="aqua" className="!p-5">
           <div className="flex items-center justify-between">
             <span className="card-title">Root-zone moisture</span>
             <span className={`chip ${
@@ -105,15 +112,15 @@ export default function SoilHealth() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+            <div className={`rounded-lg border p-3 ${TINT.aqua}`}>
               <div className="text-[10px] uppercase tracking-wider text-mist/70">
                 Available water
               </div>
-              <div className="font-mono text-leaf-700">
+              <div className="font-mono text-aqua-700">
                 {cm.available_water_pct ?? "—"}% above wilting point
               </div>
             </div>
-            <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+            <div className={`rounded-lg border p-3 ${TINT.leaf}`}>
               <div className="text-[10px] uppercase tracking-wider text-mist/70">
                 Depletion allowed (MAD)
               </div>
@@ -129,7 +136,7 @@ export default function SoilHealth() {
         </Card>
 
         {/* soil texture reference */}
-        <Card className="!p-5">
+        <Card accent="soil" className="!p-5">
           <div className="flex items-center justify-between">
             <span className="card-title">Soil texture reference</span>
             <SourceChip source="historical_dataset"
@@ -177,7 +184,7 @@ export default function SoilHealth() {
       </div>
 
       {/* nutrient analysis */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Estimated nutrient depletion</span>
           <div className="flex gap-2">
@@ -186,17 +193,16 @@ export default function SoilHealth() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
-          {([["N", n.estimated_depletion.n, "kg/ha"],
-             ["P", n.estimated_depletion.p, "kg/ha"],
-             ["K", n.estimated_depletion.k, "kg/ha"]] as const).map(([el, v, unit]) => (
-            <div key={el} className="rounded-xl border border-line/70
-                                     bg-night/40 p-4">
+          {([["N", n.estimated_depletion.n, "leaf"],
+             ["P", n.estimated_depletion.p, "soil"],
+             ["K", n.estimated_depletion.k, "aqua"]] as const).map(([el, v, accent]) => (
+            <div key={el} className={`rounded-xl border p-4 ${TINT[accent]}`}>
               <div className="flex items-baseline justify-between">
                 <span className="font-display text-lg font-semibold text-ink">
                   {el}
                 </span>
-                <span className="font-mono text-lg text-warn-700">
-                  {v ?? "—"} <span className="text-xs text-mist/70">{unit}</span>
+                <span className={`font-mono text-lg ${NUMBER_TONE[accent]}`}>
+                  {v ?? "—"} <span className="text-xs text-mist/70">kg/ha</span>
                 </span>
               </div>
               <div className="mt-1 text-[10px] text-mist/70">
@@ -227,7 +233,7 @@ export default function SoilHealth() {
       </Card>
 
       {/* legume rotation */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Legume rotation recommendations</span>
           <span className="text-[11px] text-mist/70">
@@ -241,7 +247,7 @@ export default function SoilHealth() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.06 }}
-                        className="rounded-xl border border-line/70 bg-night/40 p-4">
+                        className={`rounded-xl border p-4 ${TINT.leaf}`}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-ink">{l.name}</span>
                 <span className="font-mono text-sm text-leaf-600">
@@ -274,12 +280,11 @@ export default function SoilHealth() {
       </Card>
 
       {/* manures */}
-      <Card className="!p-5">
+      <Card accent="soil" className="!p-5">
         <span className="card-title">Organic & split-nutrient options</span>
         <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {n.manure_recommendations.map((m) => (
-            <div key={m.key} className="rounded-xl border border-line/70
-                                        bg-night/40 p-3.5">
+            <div key={m.key} className={`rounded-xl border p-3.5 ${TINT.soil}`}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-ink">{m.name}</span>
                 <span className="chip src-historical">{m.rate}</span>
@@ -306,7 +311,7 @@ export default function SoilHealth() {
       {dashboard.warnings.filter((w) =>
         ["waterlogging", "nutrient_leaching", "excessive_soil_moisture",
          "crop_water_stress"].includes(w.type)).length > 0 && (
-        <Card className="!p-5">
+        <Card accent="alert" className="!p-5">
           <span className="card-title">Soil-related risk indicators</span>
           <div className="mt-3 space-y-2.5">
             {dashboard.warnings.filter((w) =>

@@ -114,7 +114,7 @@ export default function HowItWorks() {
       </div>
 
       {/* 12-step engine */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">The 12-step irrigation optimization</span>
           <span className="text-[11px] text-mist/70">
@@ -143,7 +143,7 @@ export default function HowItWorks() {
 
       {/* ML model card */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="!p-5">
+        <Card accent="aqua" className="!p-5">
           <div className="flex items-center justify-between">
             <span className="card-title">ML model card</span>
             <SourceChip source="model_prediction" />
@@ -184,7 +184,7 @@ export default function HowItWorks() {
           )}
         </Card>
 
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5">
           <span className="card-title">Where the numbers come from</span>
           <div className="mt-4 space-y-3 text-xs leading-relaxed text-mist/75">
             <div>
@@ -224,7 +224,7 @@ export default function HowItWorks() {
       </div>
 
       {/* honest limitations */}
-      <Card className="!p-5 !border-warn-400/40">
+      <Card accent="alert" className="!p-5 !border-warn-400/40">
         <span className="card-title text-warn-600">
           Honest limitations — what this MVP does NOT claim
         </span>

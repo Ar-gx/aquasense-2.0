@@ -1,0 +1,402 @@
+================================================================
+AQUASENSE AI — BACKEND, IN PLAIN ENGLISH
+File: backnd.txt   (simple rewrite of the backend document)
+Project: AquaSense 2.0 — Smart Irrigation & Soil Health
+Folder: /backend   |   34 Python files   |   30 API endpoints
+================================================================
+
+THE STACK IN ONE LINE
+---------------------
+FastAPI · Uvicorn · httpx · SQLAlchemy 2.0 · Pydantic v2 ·
+SQLite (can move to Postgres) · XGBoost / scikit-learn ·
+pandas · numpy · joblib · REST API under /api/v1 ·
+22/22 smoke checks passing
+
+HOW TO RUN IT
+-------------
+  cd backend
+  .venv\Scripts\pip install -r requirements.txt
+  .venv\Scripts\uvicorn app.main:app --host 127.0.0.1 --port 8000
+  Open http://127.0.0.1:8000/docs  -> clickable list of all APIs
+
+HOW TO RETRAIN THE AI MODEL
+---------------------------
+  .venv\Scripts\python -m app.ml.train
+
+
+================================================================
+THE TOOLS, ONE BY ONE (what each thing is, in simple words)
+================================================================
+
+1. FASTAPI — the receptionist (web framework)
+   WHAT IT IS:
+   A Python framework for building APIs. You write a small
+   function for each URL, and FastAPI handles the rest —
+   receiving requests, sending back JSON, and even generating
+   free documentation.
+
+   WHAT WE DID:
+   - app/main.py sets up the app and attaches 5 route files:
+       farms.py            -> add/view/update farms      (6 URLs)
+       sensors_weather.py  -> sensors, weather, predict  (5 URLs)
+       recommendation.py   -> recommendation, dashboard  (2 URLs)
+       analytics.py        -> history, savings, awards   (5 URLs)
+       meta.py             -> health, crops, location... (12 URLs)
+     Total: 30 URLs, all starting with /api/v1
+   - If something goes wrong, our error handler replies with the
+     same neat JSON format the frontend expects — never an ugly
+     error page.
+   - Free interactive docs at /docs (handy for the demo).
+
+
+2. UVICORN — the machine that keeps the shop open (server)
+   WHAT IT IS:
+   FastAPI is the recipe; uvicorn is the stove that actually
+   cooks it. It's the program that listens on port 8000 and
+   passes incoming requests to FastAPI.
+
+   WHAT WE DID:
+   - Run it with:  uvicorn app.main:app --port 8000
+   - The frontend (Vite) automatically forwards all /api calls
+     to this port, so the browser and backend find each other
+     without any CORS headaches in development.
+
+
+3. HTTPX — the phone we call outside services with
+   WHAT IT IS:
+   A library for making HTTP requests from Python (like the
+   browser's fetch, but inside the backend). We use it to call
+   live weather and location APIs.
+
+   WHAT WE DID:
+   - Calls Open-Meteo (weather forecast), OpenWeather (optional),
+     NASA POWER (sunlight data), OpenStreetMap (location names),
+     data.gov.in (district rainfall), USDA NASS (crop yields).
+   - IMPORTANT: every outside source is OPTIONAL. If the
+     internet or an API is down, we fall back to the next one,
+     and finally to clearly-labelled simulated data. The app
+     never crashes because some API failed — it just honestly
+     says "simulated".
+
+
+4. SQLALCHEMY 2.0 — the middleman to the database (ORM)
+   WHAT IT IS:
+   A library that lets Python code talk to a SQL database
+   without writing raw SQL. You work with Python "objects", and
+   SQLAlchemy translates them into database queries.
+
+   WHAT WE DID:
+   - Three main tables: Farm, SensorReading, IrrigationEvent.
+   - We only used column types that work on BOTH SQLite and
+     PostgreSQL — that's what makes it "Postgres-ready". Moving
+     to a real server database later = change one setting, no
+     code rewrite.
+
+
+5. PYDANTIC v2 — the bouncer (validation)
+   WHAT IT IS:
+   A library that checks incoming data. You declare what the
+   data SHOULD look like (types, required fields), and Pydantic
+   rejects anything malformed with a clear message — bad data
+   never reaches the database.
+
+   WHAT WE DID:
+   - config.py reads our .env file (API keys, database URL,
+     switches) — this uses pydantic-settings + python-dotenv.
+   - Every response uses one fixed JSON shape:
+       success: { "status": "success", "data": ... }
+       error:   { "status": "error",   "error": {...} }
+     The frontend was built to expect exactly this shape, so
+     both ends always agree.
+
+
+6. SQLITE — the filing cabinet (database)
+   WHAT IT IS:
+   A database that lives in a single file (aquasense.db). No
+   server to install — perfect for hackathons and demos.
+
+   WHAT WE DID:
+   - Stores farms, sensor readings and irrigation events.
+   - If DATABASE_URL in .env points to PostgreSQL, the app uses
+     that instead — no code changes needed. So: runs on SQLite
+     now, ready for Postgres later.
+
+
+7. XGBOOST / SCIKIT-LEARN — the machine-learning brains
+   WHAT THEY ARE:
+   - XGBoost: a popular ML algorithm that makes predictions by
+     combining hundreds of tiny decision trees (explained in
+     section 13).
+   - scikit-learn: the general ML toolbox; here it provides the
+     backup model if XGBoost isn't installed.
+
+   WHAT WE DID:
+   - app/ml/train.py creates the training data, trains the
+     model, measures how good it is, and saves it to a file.
+   - app/services/ml_service.py loads that file and answers
+     "what will the soil moisture be tomorrow?" requests.
+   - The full story of how the model works: SECTION 13 below.
+
+
+8. PANDAS / NUMPY / JOBLIB — the helpers
+   WHAT THEY ARE:
+   - pandas: tables of data (like Excel sheets in code) — used
+     to build the training dataset.
+   - numpy: fast number crunching — used for the maths behind
+     the error scores (MAE, RMSE, R²).
+   - joblib: saves and loads the trained model file.
+
+   WHAT WE DID:
+   pandas built the 120,000-row dataset, numpy did the
+   train/test split and the error maths, joblib writes and
+   reads model.joblib.
+
+
+9. REST API UNDER /api/v1 — the rules of our API
+   WHAT IT IS:
+   A simple style: each thing is a URL, you use GET to read and
+   POST/PATCH to write, data is JSON, and everything sits under
+   /api/v1 (version 1, so a future v2 doesn't break old apps).
+
+   WHAT WE DID:
+   - 30 endpoints. The important ones:
+       POST /farms/demo         load the demo farm
+       GET  /dashboard/1        everything for the dashboard
+       GET  /recommendation/1   "irrigate 2,500 L at 6 AM"
+       POST /predict/1          the AI's moisture prediction
+       GET  /weather/1          weather for the farm
+       GET  /history/1          irrigation history
+       GET  /water-analytics/1  water savings
+       POST /history/1/events   farmer logs an irrigation
+       GET  /crops, /soils      reference lists
+   - Every single reply uses the same {status, data} envelope,
+     and errors come back in the same envelope too.
+
+
+10. LIVE DATA SOURCES (we call these, all optional)
+    Open-Meteo, OpenWeather, NASA POWER, OSM Nominatim,
+    data.gov.in, USDA NASS, AQUASTAT.
+    Rule: best source first -> next one -> simulated last.
+    Every number carries a label: Live / Estimated / Simulated.
+
+
+11. TESTING — 22/22 smoke checks
+    scripts\smoke_test.ps1 hits every endpoint the UI uses, in
+    the order a real user would (load demo -> dashboard ->
+    recommendation -> AI predict -> all other pages), and prints
+    PASS/FAIL for each. Current score: 22 PASS, 0 FAIL.
+    Honest note: these check "does the endpoint work?", not
+    deep unit tests — there is no pytest suite.
+
+
+================================================================
+12. FOLDER MAP
+================================================================
+backend/app/
+  main.py        starts everything (CORS, routes, startup)
+  core/          config (.env) + response format
+  db/            database setup + seed data
+  models/        the 3 tables (farm, readings, events)
+  routes/        the 30 URLs
+  services/      the real logic (weather, irrigation, ML...)
+  data/          reference files (crops, soils)
+  ml/            train.py + saved model files
+
+
+================================================================
+================================================================
+13. HOW THE AI MODEL WORKS (the simple version)
+================================================================
+================================================================
+
+13.1 THERE ARE TWO KINDS OF "AI" HERE — DON'T MIX THEM UP
+----------------------------------------------------------
+  (a) A TRAINED MODEL (real machine learning): predicts soil
+      moisture for tomorrow. Built with XGBoost.
+  (b) RULES (no learning involved): the irrigation advice,
+      warnings and nutrient tips. These are just published
+      farming formulas applied by code — smart, but not ML.
+  When someone asks "how does the AI work?", the honest answer
+  covers both.
+
+13.2 WHAT THE MODEL PREDICTS
+----------------------------
+  Question it answers:
+      "The soil is at 31% moisture now, it's 34°C, rainy
+       weather is coming — what will the moisture be in 24
+       hours?"
+  It's a REGRESSION model: it outputs a number (moisture %),
+  not a yes/no or a category.
+
+
+13.3 WHERE THE TRAINING DATA CAME FROM
+--------------------------------------
+  Problem: we had no field-sensor dataset of thousands of
+  farms. So we BUILT one — simulated, but based on real science:
+  - We coded an actual soil water-balance calculation (the kind
+    the FAO uses):
+      tomorrow's moisture = today's moisture
+          + (rain that soaks in
+             + irrigation that reaches roots
+             - water the crop drinks (Kc x ETo))
+          / root-zone size
+          + tiny random noise
+  - Real agronomy tables are baked in: how much water each soil
+    type holds, crop coefficients (Kc) for each crop at each
+    growth stage, root depths, irrigation method efficiencies.
+  - We ran it 120,000 times with randomized weather/soil/crop
+    combos (fixed seed, so it's reproducible) to get 120,000
+    example rows.
+  - Split: 96,000 rows to learn from, 24,000 rows held back as
+    a secret test the model never saw during training.
+  !! FULL DISCLOSURE (also in the app's own text): this is
+     simulated data, NOT real field measurements. So the scores
+     below show "it learned the simulated physics well" — they
+     are not a real-farm accuracy claim.
+
+
+13.4 THE 12 THINGS THE MODEL LOOKS AT
+--------------------------------------
+  1  soil_moisture      moisture right now (most important)
+  2  temp_c             temperature
+  3  humidity           how humid the air is
+  4  rainfall_mm        rain that fell
+  5  wind_kmh           wind speed
+  6  solar_mj           sunlight
+  7  soil_code          soil type (sandy=0 ... clay=4)
+  8  crop_code          crop (wheat, rice, maize...)
+  9  stage_code         growth stage (seedling ... harvest)
+ 10  prev_irrig_mm      how much we irrigated last time
+ 11  hours_since_irrig  how long ago that was
+ 12  forecast_rain_mm   rain coming soon
+
+  Categories (soil, crop, stage) are just numbered — trees are
+  fine with numbers.
+
+
+13.5 WHAT IT'S BUILT WITH (algorithm + settings)
+------------------------------------------------
+  XGBOOST = gradient boosting. How that works simply:
+    1. Make a rough first guess (the average).
+    2. Look at where you were wrong.
+    3. Train a small decision tree specifically on those errors.
+    4. Add it, repeat hundreds of times.
+  The final answer = all the trees' corrections added together.
+  Each tree is like a co-worker fixing a bit of the previous
+  co-worker's mistake — together they get very accurate.
+
+  Settings used for our model (from metrics.json):
+    n_estimators     = 600  how many trees (600 rounds of fixes)
+    max_depth        = 8    how detailed each tree may be
+    learning_rate    = 0.04 how much each tree's fix counts
+                           (small = careful, harder to overfit)
+    subsample        = 0.9  each tree sees 90% of the rows
+    colsample_bytree = 0.9  each tree sees 90% of the features
+  Backup: if XGBoost isn't installed, scikit-learn's
+  HistGradientBoostingRegressor trains instead, and metrics.json
+  honestly records that it was the fallback.
+
+
+13.6 THE SCORES — WHAT R², RMSE, MAE ACTUALLY MEAN
+---------------------------------------------------
+  The model was tested on the 24,000 secret rows. Our results:
+
+      MAE  = 0.714   (percentage points)
+      RMSE = 1.202   (percentage points)
+      R²   = 0.985
+
+  NOTE ON UNITS: the answer is a moisture percentage, so errors
+  are in "percentage points". If truth is 32.7% and the model
+  says 32.0%, the error is 0.7 points.
+
+  -- MAE (Mean Absolute Error) = "how wrong on average?" --
+      Take every prediction, see how far off it was (ignore
+      + or -), and average those.
+      Plain English: "On average, the prediction misses by
+      about 0.7 moisture points." If the model says 30%, the
+      truth is usually somewhere around 29.3 - 30.7.
+      It's the most human-friendly number of the three.
+
+  -- RMSE (Root Mean Squared Error) = "are there big misses?" --
+      Same idea as MAE, but you SQUARE each error first, then
+      average, then square-root back.
+      Why square? So a few BAD misses count much more than lots
+      of tiny ones. MAE treats a 0.1 miss and a 5.0 miss fairly;
+      RMSE screams about the 5.0.
+      Plain English: about 1.2 points — and because RMSE (1.202)
+      is noticeably bigger than MAE (0.714), it tells us most
+      predictions are very close, with a handful of larger ones.
+
+  -- R² (R-squared) = "score out of 1" --
+      Compares the model against the laziest possible approach:
+      always guessing the average.
+        1.0 = perfect
+        0.0 = no better than always guessing the average
+        < 0  = worse than guessing (bad!)
+      Plain English: 0.985 means the model explains about
+      98.5% of the up-and-down movement in moisture. Almost all
+      of the variation is captured.
+      (Remember 13.3: on simulated data. On real-world noisy
+      field data, R² of 0.985 would be extraordinary — one more
+      reason we state "simulated" everywhere.)
+
+  HOW TO READ ALL THREE TOGETHER:
+      R²    -> "does it understand the pattern?" (yes: 0.985)
+      MAE   -> "typical miss"          (small: 0.714)
+      RMSE  -> "worst-case tendency"   (bigger than MAE)
+
+
+13.7 WHY WE STILL LABEL IT "SIMULATED"
+--------------------------------------
+  The model learned our simulation, not real farms. So the app
+  always says: "trained on simulated water-balance data, not
+  field-validated." That's deliberate — better to be honest
+  than to impress with a fake number. It predicts moisture, not
+  yield or profit.
+
+
+13.8 HOW IT RUNS WHILE THE APP IS OPENING
+-----------------------------------------
+  - python -m app.ml.train  ->  model.joblib + metrics.json
+  - The server loads model.joblib once and keeps it in memory.
+  - If the file is missing, the server TRAINS IT on first
+    startup by itself, then uses it.
+  - POST /predict/1  ->  builds the 12 numbers above from the
+    farm's current state  ->  model predicts  ->  reply includes
+    the predicted moisture AND its scores (MAE/RMSE/R²) so the
+    UI can show them.
+  - 7-day forecast trick: predict day 2, then use that answer
+    as the input to predict day 3, and so on. Honesty bands:
+      days 1-3  = "short range"   -> medium confidence
+      days 4-7  = "extended outlook" -> low confidence
+  - If the model file is broken: falls back to a simple,
+    transparent water-balance calculation and clearly labels it
+    "rule-based". It never fakes a model result.
+
+
+13.9 THE RULES SIDE (the rest of the "AI")
+------------------------------------------
+  The irrigation recommendation is NOT machine learning — it's
+  consistent agronomy logic:
+  - Compute the STRESS line for this soil + crop:
+      stress = wilting point + (field capacity - wilting point)
+               x (1 - how much stress this crop tolerates)
+  - If moisture drops to that line (trigger), irrigate —
+    BUT only if at least 2 days passed since last time, and
+    skip entirely if coming rain will cover the gap.
+  - Top the soil back up to ~98% of field capacity, then divide
+    by your method's efficiency (drip keeps 90% of the water,
+    flood only 45%) to get the gross volume to apply.
+  - The savings chart replays this same rule for 30 days and
+    compares it to the farmer's recorded habit. Rain savings
+    and irrigation savings are counted separately — never the
+    same litre twice.
+
+  THE SHORT STORY: XGBoost looks into tomorrow's moisture,
+  the rule engines turn that (+ weather, soil and crop
+  science) into "irrigate X litres at Y time", and everything
+  is labelled with where the number came from.
+
+================================================================
+END OF DOCUMENT
+================================================================

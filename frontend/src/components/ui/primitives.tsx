@@ -68,6 +68,15 @@ export function Stripe({ accent = "leaf", className = "" }: {
   );
 }
 
+/** Subtle tinted fill + matching border for small value tiles (earthy hue, ~10%). */
+export const TINT: Record<Accent, string> = {
+  leaf: "border-leaf-400/40 bg-leaf-500/10",
+  aqua: "border-aqua-400/40 bg-aqua-500/10",
+  sand: "border-sand-400/50 bg-sand-400/20",
+  soil: "border-soil-400/40 bg-soil-500/10",
+  alert: "border-alert-400/40 bg-alert-500/10",
+};
+
 /* ---------- glass card with optional hover lift ---------- */
 export function Card({ children, className = "", hover = false, delay = 0, accent }: {
   children: ReactNode; className?: string; hover?: boolean; delay?: number;

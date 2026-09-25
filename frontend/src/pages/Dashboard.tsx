@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { PredictPayload } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import OptimalPlanCard from "../components/dashboard/OptimalPlanCard";
 import AlertsPanel from "../components/dashboard/AlertsPanel";
@@ -101,6 +102,35 @@ export default function Dashboard() {
       {/* hero plan */}
       <OptimalPlanCard d={d} />
 
+      {/* warnings — right under the plan so farmers see risk first */}
+      <AlertsPanel warnings={d.warnings} status={reco.status} />
+
+      {/* quick metrics */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {d.achievements.slice(0, 4).map((a, i) => (
+          <motion.div key={a.metric}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="glass relative p-4">
+            <Stripe accent={(["leaf", "aqua", "sand", "soil"] as const)[i % 4]} />
+            <div className="text-[11px] text-mist/75">{a.label}</div>
+            <div className="mt-1 font-display text-xl font-semibold text-ink">
+              <CountUp value={a.value}
+                       format={(v) => a.unit === "%"
+                         ? pct(v, 1)
+                         : a.unit === "L" || a.unit === "L/ha"
+                           ? fmtLitresShort(v)
+                           : `${Math.round(v)} ${a.unit}`} />
+            </div>
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <SourceChip source={a.source} />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <AdvancedInfo hint="graphs & technical detail">
       {/* forecast + rain intelligence */}
       <div className="grid gap-5 lg:grid-cols-5">
         <Card accent="aqua" className="lg:col-span-3 !p-5">
@@ -165,9 +195,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* warnings */}
-      <AlertsPanel warnings={d.warnings} status={reco.status} />
-
       {/* water usage + lifecycle */}
       <div className="grid gap-5 lg:grid-cols-2">
         <Card accent="aqua" className="!p-5">
@@ -204,30 +231,9 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* quick metrics */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {d.achievements.slice(0, 4).map((a, i) => (
-          <motion.div key={a.metric}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="glass relative p-4">
-            <Stripe accent={(["leaf", "aqua", "sand", "soil"] as const)[i % 4]} />
-            <div className="text-[11px] text-mist/75">{a.label}</div>
-            <div className="mt-1 font-display text-xl font-semibold text-ink">
-              <CountUp value={a.value}
-                       format={(v) => a.unit === "%"
-                         ? pct(v, 1)
-                         : a.unit === "L" || a.unit === "L/ha"
-                           ? fmtLitresShort(v)
-                           : `${Math.round(v)} ${a.unit}`} />
-            </div>
-            <div className="mt-1.5 flex items-center gap-1.5">
-              <SourceChip source={a.source} />
-            </div>
-          </motion.div>
-        ))}
-      </div>
+        {/* data status */}
+        <DataStatusPanel items={d.data_status} />
+      </AdvancedInfo>
 
       {/* yield reference honesty */}
       <Note tone="info">
@@ -269,9 +275,6 @@ export default function Dashboard() {
           {d.nutrients.label}. {d.nutrients.explanation.basis_note}
         </p>
       </Card>
-
-      {/* data status */}
-      <DataStatusPanel items={d.data_status} />
 
       <div className="flex flex-wrap items-center justify-between gap-2
                       text-[11px] text-mist/65">

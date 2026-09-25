@@ -1,0 +1,378 @@
+================================================================
+AQUASENSE AI — FRONTEND TECHNOLOGY DOCUMENT
+File: frntnd.txt
+Project: AquaSense 2.0 — Smart Irrigation & Soil Health (AI MVP)
+Folder: /frontend   |   40 TypeScript source files
+================================================================
+
+STACK AT A GLANCE
+-----------------
+React 18 + TypeScript · Vite · Tailwind CSS · Recharts ·
+Framer Motion · React Router (16 SPA routes) · Leaflet (map) ·
+React Context + typed fetch client (state & data layer)
+
+Scripts:
+  npm run dev      -> Vite dev server (port 5173, hot reload)
+  npm run build    -> tsc -b (type-check) + vite build (bundle to /dist)
+  npm run preview  -> serve the production build locally
+
+
+================================================================
+1. REACT 18  (react 18.3.1, react-dom 18.3.1)
+================================================================
+
+WHAT IT DOES
+------------
+React is the UI library. It lets you build pages out of reusable
+COMPONENTS instead of raw HTML strings. It keeps a virtual copy of
+the UI (virtual DOM) and re-renders only what changed when state
+changes. React 18 additions we benefit from: automatic batching,
+StrictMode, and a concurrent rendering pipeline (smoother big lists
+/charts).
+
+WHAT WE DID WITH IT
+-------------------
+- Built the whole app as components:
+    pages/            16 page components (Dashboard, SoilHealth,
+                      Weather, History, Irrigation, CropAnalysis,
+                      WaterAnalytics, Achievements, Settings,
+                      Connect, Impact, HowItWorks, DataTransparency,
+                      Landing, Onboarding, NotFound)
+    components/ui      shared building blocks: Card, Stripe, Note,
+                       ProgressBar, SourceChip, CountUp, Skeleton,
+                       PageHeader, AdvancedInfo, AnimatedGridPattern
+    components/charts  6 chart components
+    components/layout  Navbar + Shell (app frame)
+    components/dashboard, /onboarding, /analysis
+- Used hooks everywhere:
+    useState   -> open/close of the "Advanced info" panels
+                  (AdvancedInfo.tsx, Navbar.tsx)
+    useEffect  -> loading dashboard/weather/history data on mount
+    useContext -> reading the shared FarmContext
+    useRef/useState -> the CountUp number animation
+- Conditional rendering: {active && <Card/>}, empty states
+  (<EmptyFarm>), error notes (<Note tone="warn">).
+- List rendering with .map() + stable keys: crop tiles, warnings,
+  nutrient cards, event tables.
+- Composition pattern: <Card accent="aqua"> wraps content, the same
+  Card is reused on all 52 cards in the app.
+
+
+================================================================
+2. TYPESCRIPT  (typescript 5.5.3)
+================================================================
+
+WHAT IT DOES
+------------
+TypeScript is JavaScript with static types. You declare the shape
+of your data (interfaces, unions, generics), and the compiler
+refuses to build code that doesn't match. Catches wrong field
+names, wrong argument types and null misuse BEFORE the app runs.
+
+WHAT WE DID WITH IT
+-------------------
+- Build = "tsc -b && vite build": no type error can ship.
+- src/lib/types.ts declares the exact shape of every backend
+  payload: DashboardPayload, Recommendation, WeatherPayload,
+  HistoryPayload, WaterAnalytics, NutrientAnalysis, Farm,
+  CropCard, SourceTag, Envelope<T> (the API's {status,data,error}
+  wrapper), etc. If the backend renames a field, the build breaks
+  here instead of at runtime.
+- Generics in the API client (services/api.ts):
+      async function request<T>(path): Promise<T>
+  so api.getDashboard(id) returns a typed DashboardPayload — every
+  page reads d.warnings, d.nutrients... with full autocompletion.
+- Union types as safety rails:
+      type Accent = "leaf" | "aqua" | "sand" | "soil" | "alert"
+  A card can only be given a valid earthy accent; typos fail build.
+- Custom error class with status code: class ApiError extends
+  Error { readonly status: number } — callers can react to 404s.
+- "as const" tuples for the N/P/K nutrient tiles so each element
+  carries its own colour key at compile time.
+- Strict null checks: cm.moisture_pct ?? "—" handles missing data
+  explicitly (the app is honest about unknown values).
+
+
+================================================================
+3. VITE  (vite 5.3.3, @vitejs/plugin-react)
+================================================================
+
+WHAT IT DOES
+------------
+Vite is the dev server + bundler (replaces Create React App /
+webpack). In dev it serves modules on demand with native ES
+modules => instant hot reload. For production it bundles everything
+with Rollup into optimized, hashed assets.
+
+WHAT WE DID WITH IT
+-------------------
+- npm run dev: instant reload — every CSS/JSX edit shows in <1s
+  (this is how all the visual iterations were checked).
+- Dev proxy: requests to /api/* are forwarded to the FastAPI
+  backend at 127.0.0.1:8000 (vite.config.ts), so the frontend
+  always calls relative "/api/v1/..." URLs — no CORS juggling in
+  development, and the same base path works in production.
+- Production output (dist/):
+      index.html      ~1.3 kB shell
+      index.css       ~40 kB  (all Tailwind utilities)
+      index.js        ~236 kB app code (gzip ~60 kB)
+      charts.js       ~541 kB Recharts, SPLIT into its own chunk
+                      so it loads separately from app code
+      motion.js       ~123 kB framer-motion, also split
+- Type-script build: "tsc -b" runs first, so type errors stop the
+  build before Vite bundles.
+
+
+================================================================
+4. TAILWIND CSS  (tailwindcss 3.4.4 + postcss + autoprefixer)
+================================================================
+
+WHAT IT DOES
+------------
+Utility-first CSS framework. Instead of writing .card { ... }
+stylesheets, you compose designs from small utility classes
+directly in the JSX (className="rounded-xl border p-4"). All
+colours/spacing come from a config file = one single source of
+truth for the design system. PostCSS + Autoprefixer handle
+browser compatibility automatically.
+
+WHAT WE DID WITH IT
+-------------------
+- Design tokens in tailwind.config.js — the entire earthy palette:
+    ink #23190f   canvas #efe5d0 (page ground)
+    night #f3eee2 panel #fdfbf6  line #e3d9c6  mist #65594b
+    leaf (green x10), aqua (blue x10), soil (brown x10),
+    sand (wheat x9), alert (terracotta), warn (amber)
+  plus custom fonts, card shadows, and keyframe animations
+  (floaty, drift, shimmer, stream).
+- Reusable component classes in index.css (@layer components):
+    .glass / .glass-strong   card surfaces
+    .btn-primary / .btn-ghost buttons
+    .field / .label          form inputs
+    .card-title              uppercase brown card headings
+    .chip + .src-*           provenance chips (Live API, Estimated,
+                             Simulated, Rule-based...) colour-coded
+- The page BACKGROUND is built in Tailwind/CSS too: body has
+  5 stacked fixed gradients — soil-dot grain (24px tile) + green,
+  blue, wheat and brown radial washes.
+- Responsive layout: grids switch with sm:/lg: prefixes
+  (e.g. metric tiles: grid-cols-2 -> sm:grid-cols-3 ->
+  lg:grid-cols-4).
+- Arbitrary values for one-off needs, e.g. the navbar horizon
+  stripe: bg-[linear-gradient(90deg,#6d9a4c_0%,...)]
+- Accent stripes on cards: <Stripe> = 3px gradient bar, rotating
+  leaf/aqua/sand/soil per card via the Accent prop.
+
+
+================================================================
+5. RECHARTS  (recharts 2.12.7)
+================================================================
+
+WHAT IT DOES
+------------
+React charting library built on SVG (D3 maths underneath). Charts
+are declared as JSX components — <ComposedChart>, <Bar>, <Line>,
+<Tooltip>, <ResponsiveContainer> — so they re-render with your
+data and resize with the container. Supports hover tooltips,
+axes, grids and mixed chart types.
+
+WHAT WE DID WITH IT
+-------------------
+6 chart components in components/charts/, one shared theme file:
+- MoistureForecastChart  -> soil-moisture forecast vs stress
+                            thresholds (Dashboard)
+- RainVsIrrigationChart  -> 7-day rainfall vs irrigation stance
+                            (Weather, Irrigation)
+- WaterUsageChart        -> usage history with daily/weekly/
+                            monthly/cycle ranges + AI-goal line
+                            (History, Water Analytics)
+- LifecycleWaterChart    -> water demand by growth stage
+                            (Dashboard, Crop Analysis)
+- AchievementChart       -> cumulative savings trend, two buckets
+                            (green = irrigation, blue = rainwater)
+- ComparisonChart        -> baseline vs AI, per-hectare & whole
+                            farm bars (Water Analytics)
+- chartTheme.tsx centralises the earthy colour constants, axis/
+  grid styling and a custom <DarkTooltip> so every chart looks
+  consistent.
+- Honesty rules kept in the chart layer: negative savings are
+  drawn as negative bars (never flipped to fake positives), and
+  simulated vs live series are labelled.
+
+
+================================================================
+6. FRAMER MOTION  (framer-motion 11.2.0)
+================================================================
+
+WHAT IT DOES
+------------
+Animation library for React. You animate with props
+(initial / animate / exit / whileHover / whileInView) instead of
+CSS keyframes, which gives React-aware enter/exit animations —
+AnimatePresence removes components from the DOM only AFTER their
+exit animation finishes.
+
+WHAT WE DID WITH IT
+-------------------
+- Page entrances: every <Card> fades/slides up once when scrolled
+  into view (whileInView, viewport once).
+- The "Advanced info" expand/collapse: height 0 -> auto with
+  AnimatePresence (AdvancedInfo.tsx, Navbar desktop panel,
+  footer toggle) — content unmounts while hidden, so charts only
+  render when revealed.
+- Number count-ups trigger after motion (CountUp component also
+  respects prefers-reduced-motion).
+- Micro-interactions: moisture band marker animates to its
+  position (duration 1s, custom ease), nutrient/legume tiles
+  stagger in (delay i * 0.06), crop tiles lift on hover.
+- Hero background: AnimatedGridPattern — twinkling 4-colour dot
+  grid (green/blue/wheat/brown) behind the landing hero.
+- Reduced-motion guard: CSS media query in index.css neutralises
+  all animation/transition durations for accessibility.
+
+
+================================================================
+7. REACT ROUTER  (react-router-dom 6.24.0)
+================================================================
+
+WHAT IT DOES
+------------
+Client-side routing. The URL changes and React swaps the page
+component WITHOUT a full server reload (SPA). Provides <Routes>,
+<Route>, <Link>, <NavLink> (auto active styling), <Navigate>
+(redirects) and hooks like useNavigate.
+
+WHAT WE DID WITH IT
+-------------------
+App.tsx defines all routes — 16 pages:
+  /                 Landing (marketing/home)
+  /analyze          Onboarding wizard (new farm setup)
+  --- inside the <Shell> layout (Navbar + footer frame) ---
+  /dashboard        Farm dashboard
+  /crop-analysis    Crop water-demand analysis
+  /irrigation       12-step irrigation recommendation
+  /soil-health      Moisture & nutrient replenishment
+  /weather          Weather intelligence
+  /history          Irrigation history + record events
+  /water-analytics  Savings / efficiency analytics
+  /achievements     Goals & milestones
+  /how-it-works     Method explanation (advanced)
+  /data             Data transparency (advanced)
+  /impact           Broader impact (advanced)
+  /connect          NGOs & education (advanced)
+  /settings         Farm & data settings
+  *                 404 NotFound
+  /home -> /        redirect
+- Layout routing: the Shell route renders <Navbar/> + <Outlet/> +
+  <footer>, so every inner page shares the frame.
+- NavLink gives the active nav item its green pill styling
+  automatically.
+- useNavigate: after saving the farm or loading the demo, code
+  navigates programmatically to /dashboard.
+
+
+================================================================
+8. LEAFLET  (leaflet 1.9.4 + @types/leaflet)
+================================================================
+
+WHAT IT DOES
+------------
+Leaflet is a lightweight interactive map library (vanilla JS).
+Renders slippy maps from tile layers (OpenStreetMap by default),
+supports click events, markers and popups.
+
+WHAT WE DID WITH IT
+-------------------
+- components/onboarding/LocationPicker.tsx — the farm location
+  step of the wizard:
+    * full interactive map (OSM tiles)
+    * user CLICKS a spot -> LeafletMouseEvent gives lat/lng ->
+      a marker pin drops there
+    * coordinates are sent to the backend
+      POST /api/v1/location/reverse which reverse-geocodes them
+      to district / taluk / state (server-side, so no Google key
+      in the browser)
+    * result feeds the farm record and the weather/dashboard
+      pipeline (district also unlocks data.gov.in rainfall).
+- @types/leaflet keeps the map code typed (LeafletMouseEvent,
+  Map, Marker types).
+
+
+================================================================
+9. STATE + DATA LAYER: REACT CONTEXT + TYPED FETCH CLIENT
+================================================================
+(no Redux, no Zustand, no Axios — deliberately kept simple)
+
+9.1 REACT CONTEXT  (src/context/FarmContext.tsx)
+WHAT IT DOES
+  Context shares state through the component tree without
+  prop-drilling: a Provider at the root, useContext anywhere.
+
+WHAT WE DID WITH IT
+  - FarmContext holds: the selected farm id (persisted in
+    localStorage), the loaded dashboard payload, loading flags,
+    and actions loadDemo() / refresh().
+  - Every page starts with:
+        const { dashboard, loadDemo } = useFarm();
+    and shows <EmptyFarm> with a "Try Demo Farm" button until a
+    farm exists.
+  - When Settings edits a farm, refresh() re-runs the pipeline and
+    all pages see new data — one shared source of truth.
+
+9.2 TYPED API CLIENT  (src/services/api.ts)
+WHAT IT DOES
+  Thin wrapper over the browser's native fetch() that adds: the
+  base URL, JSON headers, response envelope parsing, error
+  objects, and TypeScript types per endpoint.
+
+WHAT WE DID WITH IT
+  - ~29 endpoints, one method each, e.g.:
+      api.getDashboard(farmId)   -> DashboardPayload
+      api.runPredict(farmId)     -> PredictPayload
+      api.getWeather(farmId)     -> WeatherPayload
+      api.recordIrrigation(...)  -> logs a real event
+      api.createFarm / loadDemoFarm / updateFarm
+      api.searchPlaces / reverseLocation  (geocoding)
+      api.getAchievements, getNutrients, getWaterAnalytics...
+  - Every response is checked: HTTP failure or status:"error"
+    throws ApiError(message, status) — pages catch it and show an
+    honest <Note tone="warn"> instead of a blank screen.
+  - Base path is "/api/v1" — proxied to the FastAPI backend in
+    dev (Vite) and served by the same origin in production.
+
+
+================================================================
+10. SUPPORTING PIECES
+================================================================
+- Google Fonts (index.html): Inter (body text), Space Grotesk
+  (display/headings — gives the "techy but friendly" look),
+  JetBrains Mono (all numbers/values — mono makes litres, %,
+  kg/ha columns line up and feel instrument-like).
+- PostCSS + Autoprefixer: compile Tailwind and add vendor
+  prefixes automatically.
+- src/lib/format.ts: shared formatters (pct(), fmtLitresShort())
+  so 2,500,000 L always renders as "2.5 ML" consistently.
+- No test framework yet: quality gate = tsc strict type-check +
+  production build.
+- npm note: 4 pre-existing vulnerabilities reported by npm; not
+  patched blindly to avoid breaking the toolchain.
+
+
+================================================================
+11. HOW IT ALL FITS TOGETHER (one user action)
+================================================================
+User clicks "Analyze My Farm"
+  -> React router switches to the page component (no reload)
+  -> the page calls a typed method, e.g. api.getDashboard(1)
+  -> fetch() hits /api/v1/dashboard/1  ->  Vite proxy  ->  FastAPI
+     backend runs the AI pipeline (weather + soil + model)
+  -> JSON comes back, typed as DashboardPayload (TypeScript)
+  -> FarmContext/useState stores it  ->  React re-renders
+  -> Tailwind classes style the layout in the earthy palette
+  -> Recharts draws the graphs, Framer Motion animates them in
+  -> user sees the plan, alerts and charts in milliseconds;
+     edits in Settings simply re-run the whole loop.
+
+================================================================
+END OF DOCUMENT
+================================================================

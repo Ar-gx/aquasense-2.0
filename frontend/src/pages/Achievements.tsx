@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { AchievementItem, WaterSummary } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import AchievementChart from "../components/charts/AchievementChart";
 import { Card, CountUp, EmptyFarm, Note, Skeleton, SourceChip } from "../components/ui/primitives";
@@ -136,20 +137,22 @@ export default function Achievements() {
         })}
       </div>
 
-      {/* chart of selected metric */}
-      {active && (
-        <Card className="!p-5">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <span className="card-title">
-              Cumulative trend — {active.label}
-            </span>
-            <span className="text-[11px] text-mist/70">
-              two buckets: irrigation savings (green) &amp; rainwater (blue)
-            </span>
-          </div>
-          <AchievementChart metric={active} />
-        </Card>
-      )}
+      <AdvancedInfo hint="trend chart & technical detail">
+        {/* chart of selected metric */}
+        {active && (
+          <Card accent="sand" className="!p-5">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <span className="card-title">
+                Cumulative trend — {active.label}
+              </span>
+              <span className="text-[11px] text-mist/70">
+                two buckets: irrigation savings (green) &amp; rainwater (blue)
+              </span>
+            </div>
+            <AchievementChart metric={active} />
+          </Card>
+        )}
+      </AdvancedInfo>
 
       {/* honesty */}
       <div className="grid gap-4 lg:grid-cols-2">

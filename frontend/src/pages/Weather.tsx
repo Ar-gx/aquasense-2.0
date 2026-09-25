@@ -7,6 +7,7 @@ import {
 import { useFarm } from "../context/FarmContext";
 import { api } from "../services/api";
 import type { WeatherPayload } from "../lib/types";
+import AdvancedInfo from "../components/ui/AdvancedInfo";
 import PageHeader from "../components/ui/PageHeader";
 import RainVsIrrigationChart from "../components/charts/RainVsIrrigationChart";
 import { Card, EmptyFarm, Note, Skeleton, SourceChip } from "../components/ui/primitives";
@@ -151,7 +152,7 @@ export default function WeatherPage() {
 
       {/* 7-day forecast */}
       {forecast && (
-        <Card className="!p-5">
+        <Card accent="aqua" className="!p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="card-title">7-day forecast</span>
             <div className="flex items-center gap-2">
@@ -191,9 +192,10 @@ export default function WeatherPage() {
         </Card>
       )}
 
+      <AdvancedInfo hint="graphs & technical detail">
       {/* rain vs irrigation (needs recommendation) */}
       {dashboard && forecast && (
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5">
           <div className="mb-3 flex items-center justify-between">
             <span className="card-title">Rainfall vs irrigation stance</span>
             <Link to="/irrigation" className="text-[11px] text-mist/70
@@ -207,7 +209,7 @@ export default function WeatherPage() {
       )}
 
       {/* NASA POWER history */}
-      <Card className="!p-5">
+      <Card accent="aqua" className="!p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <span className="card-title">Rainfall & temperature history (30 days)</span>
           <div className="flex items-center gap-2">
@@ -252,10 +254,11 @@ export default function WeatherPage() {
           <span style={{ color: C.ai }}>— min temp</span>
         </div>
       </Card>
+      </AdvancedInfo>
 
       {/* district rainfall (data.gov.in) */}
       {district && (
-        <Card className="!p-5">
+        <Card accent="soil" className="!p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="card-title">District rainfall records</span>
             <div className="flex items-center gap-2">

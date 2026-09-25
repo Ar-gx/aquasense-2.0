@@ -7,10 +7,10 @@ export default {
         // "earthy field" palette — cream canvas · moss green lead · dusty blue
         // secondary · walnut brown accent · wheat yellow highlight
         ink: "#23190f",      // warm walnut-black — headings & strong text
-        canvas: "#faf7ef",   // cream page background
+        canvas: "#efe5d0",   // warm wheat page background (earthy ground)
         night: "#f3eee2",    // warm beige inset — inputs, tracks, table stripes
-        panel: "#fdfbf6",    // cream cards & surfaces
-        line: "#e7dfcf",     // warm sand-taupe borders
+        panel: "#fdfbf6",    // cream cards & surfaces (stay white-bright on canvas)
+        line: "#e3d9c6",     // warm sand-taupe borders — firmer card definition
         mist: "#65594b",     // muted warm-taupe body text (AA on cream)
         leaf: {
           50: "#f4f7ee", 100: "#e6eed8", 200: "#cdddb7", 300: "#adcb8e",

@@ -1,26 +1,31 @@
+import { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const FOOT_LINKS = [
-  { to: "/how-it-works", label: "How It Works" },
-  { to: "/data", label: "Data Transparency" },
-  { to: "/weather", label: "Weather Intelligence" },
   { to: "/history", label: "Irrigation History" },
-  { to: "/water-analytics", label: "Water Analytics" },
   { to: "/achievements", label: "Achievements" },
   { to: "/connect", label: "NGOs & Education" },
   { to: "/settings", label: "Settings" },
 ];
 
+const FOOT_ADVANCED = [
+  { to: "/how-it-works", label: "How It Works" },
+  { to: "/data", label: "Data Transparency" },
+  { to: "/weather", label: "Weather Intelligence" },
+  { to: "/water-analytics", label: "Water Analytics" },
+];
+
 export default function Shell() {
   const loc = useLocation();
+  const [advOpen, setAdvOpen] = useState(false);
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 md:px-6">
         <Outlet />
       </main>
-      <footer className="mt-10 border-t border-line/70 bg-panel/70">
+      <footer className="mt-10 border-t border-line/70 bg-night/70">
         <div className="mx-auto grid max-w-[1400px] gap-6 px-4 py-8
                         md:grid-cols-3 md:px-6">
           <div>
@@ -43,6 +48,22 @@ export default function Shell() {
                 {l.label}
               </Link>
             ))}
+            <button
+              onClick={() => setAdvOpen((v) => !v)}
+              aria-expanded={advOpen}
+              className="col-span-2 rounded-lg border border-line/50
+                         bg-night/40 px-2.5 py-1.5 text-start text-mist/75
+                         transition hover:text-leaf-600"
+            >
+              Advanced info {advOpen ? "▴" : "▸"}
+            </button>
+            {advOpen &&
+              FOOT_ADVANCED.map((l) => (
+                <Link key={l.to} to={l.to}
+                      className="text-mist/70 hover:text-leaf-600">
+                  {l.label}
+                </Link>
+              ))}
           </div>
           <div className="text-xs text-mist/70">
             <div className="mb-1 font-medium text-mist/70">Problem focus</div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../services/api";
 import PageHeader from "../components/ui/PageHeader";
 import DataStatusPanel from "../components/dashboard/DataStatusPanel";
-import { Card, Note, Skeleton, SourceChip } from "../components/ui/primitives";
+import { Card, Note, Skeleton, SourceChip, TINT } from "../components/ui/primitives";
 import type { DataStatusItem } from "../lib/types";
 
 interface DataSourceRow {
@@ -114,7 +114,7 @@ export default function DataTransparency() {
       {items.length > 0 && <DataStatusPanel items={items} />}
 
       {/* taxonomy */}
-      <Card className="!p-5">
+      <Card accent="aqua" className="!p-5">
         <span className="card-title">Source taxonomy — what each chip means</span>
         <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
           {TAXONOMY.map((t) => (
@@ -129,7 +129,7 @@ export default function DataTransparency() {
 
       {/* ML metrics */}
       {ds?.ml && (
-        <Card className="!p-5">
+        <Card accent="leaf" className="!p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="card-title">Model metrics</span>
             <SourceChip source="model_prediction"
@@ -158,7 +158,7 @@ export default function DataTransparency() {
       {/* reference datasets */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* AQUASTAT */}
-        <Card className="!p-5">
+        <Card accent="sand" className="!p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="card-title">FAO AQUASTAT — water context</span>
             <SourceChip source="historical_dataset"
@@ -208,7 +208,7 @@ export default function DataTransparency() {
         </Card>
 
         {/* USDA NASS */}
-        <Card className="!p-5">
+        <Card accent="soil" className="!p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="card-title">USDA NASS — yield benchmark</span>
             <SourceChip source={nass?.source ?? "historical_dataset"}
@@ -243,7 +243,7 @@ export default function DataTransparency() {
       </div>
 
       {/* datasets used list */}
-      <Card className="!p-5">
+      <Card accent="leaf" className="!p-5">
         <span className="card-title">Public datasets &amp; APIs used</span>
         <div className="mt-3 grid gap-2.5 text-xs sm:grid-cols-2 lg:grid-cols-3">
           <Ds name="OpenWeather" kind="current weather" link="https://openweathermap.org/api" />
@@ -273,7 +273,7 @@ export default function DataTransparency() {
 
 function M({ label, v }: { label: string; v: string }) {
   return (
-    <div className="rounded-lg border border-line/60 bg-night/40 p-3">
+    <div className={`rounded-lg border p-3 ${TINT.aqua}`}>
       <div className="text-[10px] uppercase tracking-wider text-mist/70">{label}</div>
       <div className="mt-0.5 font-mono text-sm text-ink">{v}</div>
     </div>
@@ -283,8 +283,8 @@ function M({ label, v }: { label: string; v: string }) {
 function Ds({ name, kind, link }: { name: string; kind: string; link: string }) {
   return (
     <a href={link} target="_blank" rel="noreferrer"
-       className="rounded-xl border border-line/60 bg-night/40 p-3 transition
-                  hover:border-leaf-400/50">
+       className={`rounded-xl border p-3 transition
+                   hover:border-leaf-400/50 ${TINT.leaf}`}>
       <div className="font-medium text-ink">{name} ↗</div>
       <div className="mt-0.5 text-[11px] text-mist/75">{kind}</div>
     </a>
