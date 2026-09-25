@@ -29,5 +29,5 @@ jobs:
       - name: Wake the Render service
         run: |
           curl -fsS --retry 5 --retry-delay 30 --max-time 180 \
-            https://aquasense-api.onrender.com/api/v1/health
+            https://aquasense-api-ngg1.onrender.com/api/v1/health
           echo " backend warm"

@@ -58,12 +58,12 @@ Files involved:
    `DATABASE_URL`, `OPENWEATHER_API_KEY`, `DATA_GOV_API_KEY`, `USDA_NASS_API_KEY`.
 4. **Create Blueprint** → first build takes ~2–4 min (pip installs
    scikit-learn / xgboost / pandas).
-5. Note your URL: `https://aquasense-api.onrender.com` (Render appends a
+5. Note your URL: `https://aquasense-api-ngg1.onrender.com` (Render appends a
    random suffix if the name is taken — copy the real one from the dashboard).
 
-Verify: <https://aquasense-api.onrender.com/api/v1/health> →
+Verify: <https://aquasense-api-ngg1.onrender.com/api/v1/health> →
 `{"status":"success","data":{"status":"healthy",…}}`
-Interactive docs: <https://aquasense-api.onrender.com/docs>
+Interactive docs: <https://aquasense-api-ngg1.onrender.com/docs>
 
 > The trained model ships in the repo (`backend/app/ml/artifacts/model.joblib`)
 > so no training happens at deploy time. If the artifact were ever missing the
@@ -73,14 +73,15 @@ Interactive docs: <https://aquasense-api.onrender.com/docs>
 
 ## 3. Point the frontend at your Render URL
 
-`frontend/vercel.json` contains this line — **replace the host if Render gave
-you a different one than `aquasense-api.onrender.com`:**
+`frontend/vercel.json` must proxy to **your** Render host — already set to the
+assigned URL:
 
 ```json
-{ "source": "/api/:path*", "destination": "https://aquasense-api.onrender.com/api/:path*" }
+{ "source": "/api/:path*", "destination": "https://aquasense-api-ngg1.onrender.com/api/:path*" }
 ```
 
-Commit and push after editing.
+If you ever rename/recreate the Render service, update that destination and
+push — otherwise every API call from the Vercel site 404s.
 
 ---
 

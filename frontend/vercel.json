@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://aquasense-api.onrender.com/api/:path*"
+      "destination": "https://aquasense-api-ngg1.onrender.com/api/:path*"
     },
     {
       "source": "/((?!api/).*)",
